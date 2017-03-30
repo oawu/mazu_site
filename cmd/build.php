@@ -26,11 +26,17 @@ Step::notCil ();
 Step::init ();
 
 Step::cleanBuild ();
+
+Step::apis ();
 Step::writeIndexHtml ();
-Step::writeAboutHtml ();
-Step::writeContactHtml ();
 Step::writeArticlesHtml ();
-Step::writeWorksHtml ();
+Step::writeGPSHtml ();
+Step::writeAuthorHtml ();
+Step::writeLicenseHtml ();
+Step::writeAlbumsHtml ();
+Step::writeVideosHtml ();
+Step::writeSearchHtml ();
+
 Step::writeSitemap ();
 
 header ('Content-Type: application/json');

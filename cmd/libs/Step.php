@@ -5,6 +5,132 @@
  * @copyright   Copyright (c) 2016 OA Wu Design
  */
 
+if (!function_exists ('web_file_exists')) {
+  function web_file_exists ($url, $cainfo = null) {
+    $options = array (CURLOPT_URL => $url, CURLOPT_NOBODY => 1, CURLOPT_FAILONERROR => 1, CURLOPT_RETURNTRANSFER => 1);
+
+    if (is_readable ($cainfo))
+      $options[CURLOPT_CAINFO] = $cainfo;
+
+    $ch = curl_init ($url);
+    curl_setopt_array ($ch, $options);
+    return curl_exec ($ch) !== false;
+  }
+}
+
+if (!function_exists ('download_web_file')) {
+  function download_web_file ($url, $fileName = null, $is_use_reffer = false, $cainfo = null) {
+    if (!web_file_exists ($url, $cainfo))
+      return null;
+
+    if (is_readable ($cainfo))
+      $url = str_replace (' ', '%20', $url);
+
+    $options = array (
+      CURLOPT_URL => $url, CURLOPT_TIMEOUT => 120, CURLOPT_HEADER => false, CURLOPT_MAXREDIRS => 10,
+      CURLOPT_AUTOREFERER => true, CURLOPT_CONNECTTIMEOUT => 30, CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_USERAGENT => "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1700.76 Safari/537.36",
+    );
+
+    if (is_readable ($cainfo))
+      $options[CURLOPT_CAINFO] = $cainfo;
+
+    if ($is_use_reffer)
+      $options[CURLOPT_REFERER] = $url;
+
+    $ch = curl_init ($url);
+    curl_setopt_array ($ch, $options);
+    $data = curl_exec ($ch);
+    curl_close ($ch);
+
+    if (!$fileName)
+      return $data;
+
+    $write = fopen ($fileName, 'w');
+    fwrite ($write, $data);
+    fclose ($write);
+
+    $oldmask = umask (0);
+    @chmod ($fileName, 0777);
+    umask ($oldmask);
+
+    return filesize ($fileName) ?  $fileName : null;
+  }
+}
+
+if (!function_exists ('video_url')) {
+  function video_url ($id, $title) {
+    return URL_VIDEO . $id . '-' . oa_url_encode ($title . HTML);
+  }
+}
+if (!function_exists ('album_url')) {
+  function album_url ($id, $title) {
+    return URL_ALBUM . $id . '-' . oa_url_encode ($title . HTML);
+  }
+}
+if (!function_exists ('article_url')) {
+  function article_url ($id, $title) {
+    return URL_ARTICLE . $id . '-' . oa_url_encode ($title . HTML);
+  }
+}
+if (!function_exists ('youtube_cover_url')) {
+  function youtube_cover_url ($vid) {
+    return 'https://img.youtube.com/vi/' . $vid . '/0.jpg';
+  }
+}
+if (!function_exists ('facebook_url')) {
+  function facebook_url ($uid) {
+    return 'https://www.facebook.com/' . $uid;
+  }
+}
+if (!function_exists ('avatar_url')) {
+  function avatar_url ($uid, $w = 100, $h = 100) {
+    $size = array ();
+    array_push ($size, isset ($w) && $w ? 'width=' . $w : ''); array_push ($size, isset ($h) && $h ? 'height=' . $h : '');
+    return 'https://graph.facebook.com/' . $uid . '/picture' . (($size = implode ('&', array_filter ($size))) ? '?' . $size : '');
+  }
+}
+if (!function_exists ('css')) {
+  function css () {
+    return array_map (function ($path) {
+      return "<link href='" . URL . $path . "' rel='stylesheet' type='text/css' />";
+    }, Min::css (func_get_args ()));
+  }
+}
+if (!function_exists ('js')) {
+  function js () {
+    return array_map (function ($path) {
+      return "<script src='" . URL . $path . "' language='javascript' type='text/javascript' ></script>";  
+    }, Min::js (func_get_args ()));
+  }
+}
+if (!function_exists('meta')) {
+  function meta () {
+    return array_map (function ($attributes) {
+      return '<meta ' . implode (' ', array_map (function ($attribute, $value) { return $attribute . '="' . $value . '"'; }, array_keys ($attributes), $attributes)) . ' />';
+    }, array_merge (array (
+        array ('charset' => 'utf-8'),
+        array ('http-equiv' => 'Content-type', 'content' => 'text/html; charset=utf-8'),
+        array ('http-equiv' => 'Content-Language', 'content' => 'zh-tw'),
+        array ('name' => 'viewport', 'content' => 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui'),
+        array ('name' => 'robots', 'content' => DEV ? 'noindex,nofollow' : 'index,follow'),
+        array ('property' => 'og:site_name', 'content' => TITLE),
+        array ('property' => 'fb:admins', 'content' => FB_ADMIN_ID),
+        array ('property' => 'fb:app_id', 'content' => FB_APP_ID),
+        array ('property' => 'og:locale', 'content' => 'zh_TW'),
+        array ('property' => 'og:locale:alternate', 'content' => 'en_US'),
+        array ('property' => 'og:type', 'content' => 'article'),
+        array ('property' => 'article:publisher', 'content' => OA_FB_URL),
+      ), func_get_args ()));
+  }
+}
+if (!function_exists('myLink')) {
+  function myLink () {
+    return array_map (function ($attributes) {
+      return '<link ' . implode (' ', array_map (function ($attribute, $value) { return $attribute . '="' . $value . '"'; }, array_keys ($attributes), $attributes)) . ' />';
+    }, func_get_args ());
+  }
+}
 if (!function_exists ('oa_url')) {
   function oa_url ($str) {
     return preg_replace ('/[\/%]/u', ' ', $str);
@@ -20,6 +146,11 @@ if (!function_exists ('remove_ckedit_tag')) {
     return preg_replace ("/\s+/u", $space ? " " : "", preg_replace ("/&#?[a-z0-9]+;/iu", "", str_replace ('▼', '', str_replace ('▲', '', trim (strip_tags ($text))))));
   }
 }
+if (!function_exists ('typeOfImg')) {
+  function typeOfImg ($img) {
+    return 'image/' . (($img = pathinfo ($img)) && $img['extension'] ? $img['extension'] : 'jpg');
+  }
+}
 
 class Step {
   public static $startTime;
@@ -32,6 +163,7 @@ class Step {
   public static $localFiles = array ();
   public static $sitemapInfos = array ();
   public static $isCli = true;
+  public static $apis = array ();
   
   public static function progress ($str, $c = 0) {
     $isStr = !is_numeric ($c);
@@ -106,7 +238,7 @@ class Step {
     if ($str) Step::progress ($str, $c);
   }
   public static function init () {
-    $paths = array (PATH, PATH_ASSET, PATH_SITEMAP, PATH_ARTICLES, PATH_WORKS, PATH_TAGS, PATH_ARTICLE, PATH_WORK);
+    $paths = array (PATH, PATH_ASSET, PATH_SITEMAP, PATH_ARTICLES, PATH_VIDEOS, PATH_ALBUMS, PATH_ALBUM, PATH_VIDEOS, PATH_VIDEO, PATH_TAGS, PATH_ARTICLE, PATH_TMP, PATH_IMG_OG_TMP);
     
     Step::newLine ('-', '初始化環境與變數', count ($paths));
 
@@ -349,17 +481,82 @@ class Step {
     umask ($oldmask);
     return true;
   }
-  public static function writeIndexHtml () {
-    
-    Step::newLine ('-', '更新 Index HTML');
-    $banners = json_decode (Step::readFile (PATH_APIS . 'banners.json'), true);
-    $promos = json_decode (Step::readFile (PATH_APIS . 'promos.json'), true);
 
-    if (!Step::writeFile (PATH . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'index' . PHP, array (
-          '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => PAGE_URL_INDEX)),
-          '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-          'banners' => $banners,
-          'promos' => $promos,
+  public static function apis () {
+    Step::newLine ('-', '取得 API');
+    $articles = array_map (function ($article) { return array_merge ($article, array ( 'url' => article_url ($article['id'], $article['title']))); }, json_decode (Step::readFile (PATH_APIS . 'articles.json'), true));
+    $tags     = array_values (array_map (function ($tag) use ($articles) { $articles = array_values (array_filter ($articles, function ($article) use ($tag) { return $article['tag'] == $tag; })); return $articles ? array ('name' => $tag, 'url' => sprintf (URL_TAG_ARTICLES, oa_url_encode ($tag)), 'articles' => $articles) : array (); }, array_unique (self::columnArray ($articles, 'tag'))));
+    $paths    = json_decode (Step::readFile (PATH_APIS . 'paths.json'), true);
+    $albums   = array_map (function ($album) { return array_merge ($album, array ( 'url' => album_url ($album['id'], $album['title']))); }, json_decode (Step::readFile (PATH_APIS . 'albums.json'), true));
+    $videos   = array_map (function ($video) { return array_merge ($video, array ( 'url' => video_url ($video['id'], $video['title']))); }, json_decode (Step::readFile (PATH_APIS . 'videos.json'), true));
+    
+    $home   = array_merge (array ('user' => array ('fbid' => OA_FB_UID, 'name' => OA), 'orm' => 'Home', 'title' => '首頁', 'url' => PAGE_URL_INDEX), json_decode (Step::readFile (PATH_APIS . 'home.json'), true));
+    $author   = array_merge (array ('user' => array ('fbid' => OA_FB_UID, 'name' => OA), 'orm' => 'Author', 'title' => '關於作者', 'url' => PAGE_URL_AUTHOR), json_decode (Step::readFile (PATH_APIS . 'author.json'), true));
+    $license   = array_merge (array ('user' => array ('fbid' => OA_FB_UID, 'name' => OA), 'orm' => 'License', 'title' => '授權聲明', 'url' => PAGE_URL_LICENSE), json_decode (Step::readFile (PATH_APIS . 'license.json'), true));
+    
+    Step::$apis = array (
+      'articles' => $articles,
+      'tags' => $tags,
+      'paths' => $paths,
+      'albums' => $albums,
+      'videos' => $videos,
+      'home' => $home,
+      'author' => $author,
+      'license' => $license,
+    );
+    Step::progress ('取得 API', '完成！');
+  }
+  public static function writeIndexHtml () {
+    Step::newLine ('-', '更新 Index HTML');
+
+    $obj = Step::$apis['home'];
+    if (!Step::writeFile (PATH . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($obj['content']), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => $obj['url']),
+              array ('property' => 'og:title', 'content' => $obj['title'] . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($obj['content'], false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => facebook_url ($obj['user']['fbid'])),
+              array ('property' => 'article:modified_time', 'content' => date ('c', strtotime ($obj['updated_at']))),
+              array ('property' => 'article:published_time', 'content' => date ('c', strtotime ($obj['created_at']))),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = $obj['cover']['c1200x630'], 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => $obj['url']),
+              array ('rel' => 'alternate', 'href' => $obj['url'], 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+              '@context' => 'http://schema.org', '@type' => 'Article',
+              'mainEntityOfPage' => array (
+                '@type' => 'WebPage',
+                '@id' => $obj['url']),
+              'headline' => $obj['title'],
+              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 630, 'width' => 1200),
+              'datePublished' => date ('c', strtotime ($obj['created_at'])),
+              'dateModified' => date ('c', strtotime ($obj['updated_at'])),
+              'author' => array (
+                  '@type' => 'Person', 'name' => $obj['user']['name'], 'url' => facebook_url ($obj['user']['fbid']),
+                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url ($obj['user']['fbid'], 300, 300), 'height' => 300, 'width' => 300)
+                ),
+              'publisher' => array (
+                  '@type' => 'Organization', 'name' => TITLE,
+                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
+                ),
+              'description' => mb_strimwidth (remove_ckedit_tag ($obj['content']), 0, 150, '…','UTF-8')
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => $obj['url'], 'title' => $obj['title'])),
+          'css' => css ('css/public' . CSS, 'css/article' . CSS),
+          'js' => js ('js/public' . JS, 'js/article' . JS),
+          'now' => 'index',
+          'content' => Step::loadView (PATH_VIEWS . '_article' . PHP, array (
+              'obj' => $obj
+            )),
         ))))) Step::error ();
   
     array_push (Step::$sitemapInfos, array (
@@ -371,95 +568,195 @@ class Step {
 
     Step::progress ('更新 Index HTML', '完成！');
   }
-  public static function writeAboutHtml () {
-    Step::newLine ('-', '更新 About HTML');
+  public static function writeAuthorHtml () {
+    Step::newLine ('-', '更新 Author HTML');
+    $obj = Step::$apis['author'];
 
-    if (!Step::writeFile (PATH . 'about' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'about' . PHP, array (
-          '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => PAGE_URL_ABOUT)),
-          '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
+    if (!Step::writeFile (PATH . 'author' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($obj['content']), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => $obj['url']),
+              array ('property' => 'og:title', 'content' => $obj['title'] . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($obj['content'], false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => facebook_url ($obj['user']['fbid'])),
+              array ('property' => 'article:modified_time', 'content' => date ('c', strtotime ($obj['updated_at']))),
+              array ('property' => 'article:published_time', 'content' => date ('c', strtotime ($obj['created_at']))),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = $obj['cover']['c1200x630'], 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => $obj['url']),
+              array ('rel' => 'alternate', 'href' => $obj['url'], 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+              '@context' => 'http://schema.org', '@type' => 'Article',
+              'mainEntityOfPage' => array (
+                '@type' => 'WebPage',
+                '@id' => $obj['url']),
+              'headline' => $obj['title'],
+              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 630, 'width' => 1200),
+              'datePublished' => date ('c', strtotime ($obj['created_at'])),
+              'dateModified' => date ('c', strtotime ($obj['updated_at'])),
+              'author' => array (
+                  '@type' => 'Person', 'name' => $obj['user']['name'], 'url' => facebook_url ($obj['user']['fbid']),
+                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url ($obj['user']['fbid'], 300, 300), 'height' => 300, 'width' => 300)
+                ),
+              'publisher' => array (
+                  '@type' => 'Organization', 'name' => TITLE,
+                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
+                ),
+              'description' => mb_strimwidth (remove_ckedit_tag ($obj['content']), 0, 150, '…','UTF-8')
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => $obj['url'], 'title' => $obj['title'])),
+          'css' => css ('css/public' . CSS, 'css/article' . CSS),
+          'js' => js ('js/public' . JS, 'js/article' . JS),
+          'now' => 'author',
+          'content' => Step::loadView (PATH_VIEWS . '_article' . PHP, array (
+              'obj' => $obj
+            )),
         ))))) Step::error ();
 
     array_push (Step::$sitemapInfos, array (
-      'uri' => '/' . 'about' . HTML,
-      'priority' => '0.4',
-      'changefreq' => 'weekly',
-      'lastmod' => date ('c'),
-    ));
-
-    Step::progress ('更新 About HTML', '完成！');
-  }
-  public static function writeContactHtml () {
-    Step::newLine ('-', '更新 Contact HTML');
-
-    if (!Step::writeFile (PATH . 'contact' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'contact' . PHP, array (
-          '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => PAGE_URL_CONTACT)),
-          '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-        ))))) Step::error ();
-
-    array_push (Step::$sitemapInfos, array (
-      'uri' => '/' . 'contact' . HTML,
+      'uri' => '/' . 'author' . HTML,
       'priority' => '0.3',
       'changefreq' => 'weekly',
       'lastmod' => date ('c'),
     ));
 
-    Step::progress ('更新 Contact HTML', '完成！');
+    Step::progress ('更新 Author HTML', '完成！');
   }
-  public static function columnArray ($objects, $key) {
-    return array_map (function ($object) use ($key) {
-      return !is_array ($object) ? is_object ($object) ? $object->$key : $object : $object[$key];
-    }, $objects);
+  public static function writeLicenseHtml () {
+    Step::newLine ('-', '更新 License HTML');
+    $obj = Step::$apis['license'];
+
+    if (!Step::writeFile (PATH . 'license' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($obj['content']), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => $obj['url']),
+              array ('property' => 'og:title', 'content' => $obj['title'] . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($obj['content'], false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => facebook_url ($obj['user']['fbid'])),
+              array ('property' => 'article:modified_time', 'content' => date ('c', strtotime ($obj['updated_at']))),
+              array ('property' => 'article:published_time', 'content' => date ('c', strtotime ($obj['created_at']))),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = $obj['cover']['c1200x630'], 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => $obj['url']),
+              array ('rel' => 'alternate', 'href' => $obj['url'], 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+              '@context' => 'http://schema.org', '@type' => 'Article',
+              'mainEntityOfPage' => array (
+                '@type' => 'WebPage',
+                '@id' => $obj['url']),
+              'headline' => $obj['title'],
+              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 630, 'width' => 1200),
+              'datePublished' => date ('c', strtotime ($obj['created_at'])),
+              'dateModified' => date ('c', strtotime ($obj['updated_at'])),
+              'author' => array (
+                  '@type' => 'Person', 'name' => $obj['user']['name'], 'url' => facebook_url ($obj['user']['fbid']),
+                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url ($obj['user']['fbid'], 300, 300), 'height' => 300, 'width' => 300)
+                ),
+              'publisher' => array (
+                  '@type' => 'Organization', 'name' => TITLE,
+                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
+                ),
+              'description' => mb_strimwidth (remove_ckedit_tag ($obj['content']), 0, 150, '…','UTF-8')
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => $obj['url'], 'title' => $obj['title'])),
+          'css' => css ('css/public' . CSS, 'css/article' . CSS),
+          'js' => js ('js/public' . JS, 'js/article' . JS),
+          'now' => 'license',
+          'content' => Step::loadView (PATH_VIEWS . '_article' . PHP, array (
+              'obj' => $obj
+            )),
+        ))))) Step::error ();
+
+    array_push (Step::$sitemapInfos, array (
+      'uri' => '/' . 'license' . HTML,
+      'priority' => '0.3',
+      'changefreq' => 'weekly',
+      'lastmod' => date ('c'),
+    ));
+
+    Step::progress ('更新 License HTML', '完成！');
   }
 
   public static function writeArticlesHtml () {
     Step::newLine ('-', '更新 Articles HTML');
 
-    $articles = array_map (function ($article) {
-      $article['user']['url'] = 'https://www.facebook.com/' . $article['user']['uid'];
-
-      return array_merge ($article, array (
-        'path' => PATH_ARTICLE . $article['id'] . '-' . oa_url ($article['title'] . HTML),
-        'url' => URL_ARTICLE . $article['id'] . '-' . oa_url_encode ($article['title'] . HTML),
-        ));
-    }, json_decode (Step::readFile (PATH_APIS . 'articles.json'), true));
-
-    $tags = array ();
-    foreach (self::columnArray ($articles, 'tags') as $ts) foreach ($ts as $t) if (!in_array ($t['id'], self::columnArray ($tags, 'id'))) array_push ($tags, $t);
-    $tags = array_map (function ($tag) use ($articles) {
-      $as = array (); foreach ($articles as $article) if (($ids = self::columnArray ($article['tags'], 'id')) && in_array ($tag['id'], $ids)) array_push ($as, $article);
-      return array_merge ($tag, array (
-        'articles' => $as,
-        'path' => sprintf (PATH_TAG_ARTICLES, oa_url ($tag['name'])),
-        'url' => sprintf (URL_TAG_ARTICLES, oa_url_encode ($tag['name'])),
-        ));
-    }, $tags);
-
-    $articles = array_map (function ($article) use ($tags) {
-      $article['tags'] = array_filter (array_map (function ($tag) use ($tags) { foreach ($tags as $t) if ($t['id'] == $tag['id']) return $t; return array (); }, $article['tags']));
-      return $article;
-    }, $articles);
-
-    $news = array_values ($articles);
-    $hots = array_values ($articles);
-    usort ($hots, function ($a, $b) { return $a['pv'] < $b['pv']; });
-
     $limit = 10;
-    $total = count ($articles);
-    if ($total) {
+    include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
+
+    if ($total = count (Step::$apis['articles'])) {
       for ($offset = 0; $offset < $total; $offset += $limit) {
-        if (!Step::writeFile (PATH_ARTICLES . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'articles' . PHP, array (
-            '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_ARTICLES)),
-            '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-            'tags' => $tags,
-            'articles' => array_slice ($articles, $offset, $limit),
-            'hots' => $hots,
-            'news' => $news,
-            'offset' => $offset,
-            'pagination' => Pagination::initialize (array (
-                'total_rows' => $total, 'per_page' => $limit, 
-                'base_url' => URL_ARTICLES,
-                'offset' => $offset,
-              ))->create_links (),
+        $i = 0;
+        $articles = array_slice (Step::$apis['articles'], $offset, $limit);
+        $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
+        try { ImageUtility::photos (array_values (array_filter (array_map (function ($article) { return download_web_file ($article['cover']['c600x315'], PATH_TMP . pathinfo ($article['cover']['c600x315'], PATHINFO_BASENAME)); }, $articles))), $ogimage_path); } catch (Exception $e) { }
+
+        if (!Step::writeFile (PATH_ARTICLES . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($description = TITLE . '有著豐富的相關文章，你知道 ' . implode (',', Step::columnArray ($articles, 'title')) . ' 嗎？不知道的朋友沒關係，趕緊來看看吧，說不定會讓你對北港更加了解喔！'), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML),
+              array ('property' => 'og:title', 'content' => '所有文章' . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($description, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => OA_FB_URL),
+              array ('property' => 'article:modified_time', 'content' => date ('c')),
+              array ('property' => 'article:published_time', 'content' => date ('c')),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_IMG_OG_TMP . $tmpName, 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML),
+              array ('rel' => 'alternate', 'href' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+            "itemListElement" => array_map (function ($article) use ($offset, $i) {
+              return array (
+                  "@type" => "ListItem",
+                  "position" => $offset + $i,
+                  "item" => array (
+                      "@id" => $article['url'],
+                      "name" => $article['title'],
+                      "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
+                      "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+                      "url" => $article['url'],
+                    )
+                  );
+              }, $articles)
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML, 'title' => '所有文章')),
+          'css' => css ('css/public' . CSS, 'css/articles' . CSS),
+          'js' => js ('js/public' . JS),
+          'now' => 'articles',
+          'content' => Step::loadView (PATH_VIEWS . 'articles' . PHP, array (
+              'tag' => '所有文章',
+              'articles' => $articles,
+              'offset' => $offset,
+              'pagination' => Pagination::initialize (array (
+                  'total_rows' => $total, 'per_page' => $limit, 
+                  'base_url' => URL_ARTICLES,
+                  'offset' => $offset,
+                ))->create_links (),
+            )),
           ))))) Step::error ();
 
         array_push (Step::$sitemapInfos, array (
@@ -470,15 +767,53 @@ class Step {
         ));
       }
     } else {
-      if (!Step::writeFile (PATH_ARTICLES . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'articles' . PHP, array (
-          '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_ARTICLES)),
-          '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-          'tags' => $tags,
-          'articles' => [],
-          'offset' => 0,
-          'hots' => $hots,
-          'news' => $news,
-          'pagination' => '',
+      if (!Step::writeFile (PATH_ARTICLES . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML),
+              array ('property' => 'og:title', 'content' => '所有文章' . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => OA_FB_URL),
+              array ('property' => 'article:modified_time', 'content' => date ('c')),
+              array ('property' => 'article:published_time', 'content' => date ('c')),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML),
+              array ('rel' => 'alternate', 'href' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+            "itemListElement" => array_map (function ($article) use ($offset, $i) {
+              return array (
+                  "@type" => "ListItem",
+                  "position" => $offset + $i,
+                  "item" => array (
+                      "@id" => $article['url'],
+                      "name" => $article['title'],
+                      "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
+                      "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+                      "url" => $article['url'],
+                    )
+                  );
+              }, array ())
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML, 'title' => '所有文章')),
+          'css' => css ('css/public' . CSS, 'css/articles' . CSS),
+          'js' => js ('js/public' . JS),
+          'now' => 'articles',
+          'content' => Step::loadView (PATH_VIEWS . 'articles' . PHP, array (
+              'tag' => '所有文章',
+              'articles' => array (),
+              'offset' => 0,
+              'pagination' => '',
+            )),
         ))))) Step::error ();
 
       array_push (Step::$sitemapInfos, array (
@@ -488,26 +823,71 @@ class Step {
         'lastmod' => date ('c'),
       ));
     }
-    foreach ($tags as $tag) {
+
+    foreach (Step::$apis['tags'] as $tag) {
       $total = count ($tag['articles']);
-      if (!file_exists ($tag['path'])) Step::mkdir777 ($tag['path']);
+      $tag_path = sprintf (PATH_TAG_ARTICLES, oa_url ($tag['name']));
+
+      if (!file_exists ($tag_path)) Step::mkdir777 ($tag_path);
 
       if ($total) {
         for ($offset = 0; $offset < $total; $offset += $limit) {
-          if (!Step::writeFile ($tag['path'] . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'tag-articles' . PHP, array (
-              '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_ARTICLES)),
-              '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-              'tag' => $tag,
-              'tags' => $tags,
-              'articles' => array_slice ($tag['articles'], $offset, $limit),
-              'hots' => $hots,
-              'news' => $news,
-              'offset' => $offset,
-              'pagination' => Pagination::initialize (array (
-                  'total_rows' => $total, 'per_page' => $limit, 
-                  'base_url' => $tag['url'],
+          $i = 0;
+          $articles = array_slice ($tag['articles'], $offset, $limit);
+          $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
+          try { ImageUtility::photos (array_values (array_filter (array_map (function ($article) { return download_web_file (str_replace('https', 'http', $article['cover']['c600x315']), PATH_TMP . pathinfo ($article['cover']['c600x315'], PATHINFO_BASENAME)); }, $articles))), $ogimage_path); } catch (Exception $e) { }
+
+          if (!Step::writeFile ($tag_path . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+              'meta' => meta (
+                array ('name' => 'keywords', 'content' => KEYWORDS),
+                array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($description = TITLE . '有著豐富的 「' . $tag['name'] . '」 相關文章，你知道 ' . implode (',', Step::columnArray ($articles, 'title')) . ' 嗎？不知道的朋友沒關係，趕緊來看看吧，說不定會讓你對北港更加了解喔！'), 0, 150, '…','UTF-8')),
+                array ('property' => 'og:url', 'content' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML),
+                array ('property' => 'og:title', 'content' => $tag['name'] . ' - ' . TITLE),
+                array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($description, false), 0, 300, '…','UTF-8')),
+                array ('property' => 'article:author', 'content' => OA_FB_URL),
+                array ('property' => 'article:modified_time', 'content' => date ('c')),
+                array ('property' => 'article:published_time', 'content' => date ('c')),
+                array ('property' => 'og:image', 'content' => $ogImgUrl = $articles[0]['cover']['c1200x630'], 'alt' => TITLE),
+                array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+                array ('property' => 'og:image:width', 'content' => 1200),
+                array ('property' => 'og:image:height', 'content' => 630)
+              ),
+              'link' => myLink (
+                  array ('rel' => 'canonical', 'href' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML),
+                  array ('rel' => 'alternate', 'href' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+                ),
+              'jsonLd' => array (
+                '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+                "itemListElement" => array_map (function ($article) use ($offset, $i) {
+                  return array (
+                      "@type" => "ListItem",
+                      "position" => $offset + $i,
+                      "item" => array (
+                          "@id" => $article['url'],
+                          "name" => $article['title'],
+                          "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
+                          "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+                          "url" => $article['url'],
+                        )
+                      );
+                  }, $articles)
+                ),
+              'scopes' => array (
+                array ('url' => URL, 'title' => TITLE),
+                array ('url' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML, 'title' => $tag['name'])),
+              'css' => css ('css/public' . CSS, 'css/articles' . CSS),
+              'js' => js ('js/public' . JS),
+              'now' => 'articles',
+              'content' => Step::loadView (PATH_VIEWS . 'articles' . PHP, array (
+                  'tag' => $tag['name'],
+                  'articles' => $articles,
                   'offset' => $offset,
-                ))->create_links (),
+                  'pagination' => Pagination::initialize (array (
+                      'total_rows' => $total, 'per_page' => $limit, 
+                      'base_url' => $tag['url'],
+                      'offset' => $offset,
+                    ))->create_links (),
+                )),
             ))))) Step::error ();
 
           array_push (Step::$sitemapInfos, array (
@@ -518,16 +898,53 @@ class Step {
           ));
         }
       } else {
-        if (!Step::writeFile ($tag['path'] . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'tag-articles' . PHP, array (
-            '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_ARTICLES)),
-            '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-            'tag' => $tag,
-            'tags' => $tags,
-            'articles' => [],
-            'hots' => $hots,
-            'news' => $news,
-            'offset' => 0,
-            'pagination' => '',
+        if (!Step::writeFile ($tag_path . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+              'meta' => meta (
+                  array ('name' => 'keywords', 'content' => KEYWORDS),
+                  array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
+                  array ('property' => 'og:url', 'content' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML),
+                  array ('property' => 'og:title', 'content' => $tag['name'] . ' - ' . TITLE),
+                  array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
+                  array ('property' => 'article:author', 'content' => OA_FB_URL),
+                  array ('property' => 'article:modified_time', 'content' => date ('c')),
+                  array ('property' => 'article:published_time', 'content' => date ('c')),
+                  array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
+                  array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+                  array ('property' => 'og:image:width', 'content' => 1200),
+                  array ('property' => 'og:image:height', 'content' => 630)
+                ),
+              'link' => myLink (
+                  array ('rel' => 'canonical', 'href' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML),
+                  array ('rel' => 'alternate', 'href' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+                ),
+              'jsonLd' => array (
+                '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+                "itemListElement" => array_map (function ($article) use ($offset, $i) {
+                  return array (
+                      "@type" => "ListItem",
+                      "position" => $offset + $i,
+                      "item" => array (
+                          "@id" => $article['url'],
+                          "name" => $article['title'],
+                          "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
+                          "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+                          "url" => $article['url'],
+                        )
+                      );
+                  }, array ())
+                ),
+              'scopes' => array (
+                array ('url' => URL, 'title' => TITLE),
+                array ('url' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML, 'title' => $tag['name'])),
+              'css' => css ('css/public' . CSS, 'css/articles' . CSS),
+              'js' => js ('js/public' . JS),
+              'now' => 'articles',
+              'content' => Step::loadView (PATH_VIEWS . 'articles' . PHP, array (
+                  'tag' => $tag['name'],
+                  'articles' => array (),
+                  'offset' => 0,
+                  'pagination' => '',
+                )),
           ))))) Step::error ();
 
         array_push (Step::$sitemapInfos, array (
@@ -539,14 +956,59 @@ class Step {
       }
     }
 
-    foreach ($articles as $article) {
-      if (!Step::writeFile ($article['path'], HTMLMin::minify (Step::loadView (PATH_VIEWS . 'article' . PHP, array (
-          '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_ARTICLES)),
-          '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-          'tags' => $tags,
-          'article' => $article,
-          'hots' => $hots,
-          'news' => $news,
+    foreach (Step::$apis['articles'] as $article) {
+      $path = PATH_ARTICLE . $article['id'] . '-' . oa_url ($article['title'] . HTML);
+
+      if (!Step::writeFile ($path, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => $article['url']),
+              array ('property' => 'og:title', 'content' => $article['title'] . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($article['content'], false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => facebook_url ($article['user']['fbid'])),
+              array ('property' => 'article:modified_time', 'content' => date ('c', strtotime ($article['updated_at']))),
+              array ('property' => 'article:published_time', 'content' => date ('c', strtotime ($article['created_at']))),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = $article['cover']['c1200x630'], 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => $article['url']),
+              array ('rel' => 'alternate', 'href' => $article['url'], 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+              '@context' => 'http://schema.org', '@type' => 'Article',
+              'mainEntityOfPage' => array (
+                '@type' => 'WebPage',
+                '@id' => $article['url']),
+              'headline' => $article['title'],
+              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 630, 'width' => 1200),
+              'datePublished' => date ('c', strtotime ($article['created_at'])),
+              'dateModified' => date ('c', strtotime ($article['updated_at'])),
+              'author' => array (
+                  '@type' => 'Person', 'name' => $article['user']['name'], 'url' => facebook_url ($article['user']['fbid']),
+                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url ($article['user']['fbid'], 300, 300), 'height' => 300, 'width' => 300)
+                ),
+              'publisher' => array (
+                  '@type' => 'Organization', 'name' => TITLE,
+                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
+                ),
+              'description' => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8')
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_ARTICLES . 'index' . HTML, 'title' => '所有文章'),
+            array ('url' => $article['url'], 'title' => $article['title'])),
+          
+          'css' => css ('css/public' . CSS, 'css/article' . CSS),
+          'js' => js ('js/public' . JS, 'js/article' . JS),
+          'now' => 'articles',
+          'last_url' => URL_ARTICLES . 'index' . HTML,
+          'content' => Step::loadView (PATH_VIEWS . 'article' . PHP, array (
+              'article' => $article,
+            )),
         ))))) Step::error ();
 
       array_push (Step::$sitemapInfos, array (
@@ -558,143 +1020,584 @@ class Step {
     }
     Step::progress ('更新 Articles HTML', '完成！');
   }
-  public static function writeWorksHtml () {
-    Step::newLine ('-', '更新 Works HTML');
+  public static function writeAlbumsHtml () {
+    Step::newLine ('-', '更新 Albums HTML');
 
-    $works = array_map (function ($work) {
-      $work['user']['url'] = 'https://www.facebook.com/' . $work['user']['uid'];
+    $limit = 12;
+    include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
 
-      return array_merge ($work, array (
-        'path' => PATH_WORK . $work['id'] . '-' . oa_url ($work['title'] . HTML),
-        'url' => URL_WORK . $work['id'] . '-' . oa_url_encode ($work['title'] . HTML),
-        ));
-    }, json_decode (Step::readFile (PATH_APIS . 'works.json'), true));
-
-    $tags = array ();
-    foreach (self::columnArray ($works, 'tags') as $ts) foreach ($ts as $t) if (!in_array ($t['id'], self::columnArray ($tags, 'id'))) array_push ($tags, $t);
-    $tags = array_map (function ($tag) use ($works) {
-      $ws = array (); foreach ($works as $work) if (($ids = self::columnArray ($work['tags'], 'id')) && in_array ($tag['id'], $ids)) array_push ($ws, $work);
-      return array_merge ($tag, array (
-        'works' => $ws,
-        'path' => sprintf (PATH_TAG_WORKS, oa_url ($tag['name'])),
-        'url' => sprintf (URL_TAG_WORKS, oa_url_encode ($tag['name'])),
-        ));
-    }, $tags);
-    $ntags = array ();
-    foreach ($tags as $tag) if (!$tag['par_id']) array_push ($ntags, array_merge ($tag, array ('subs' => array ())));
-    usort ($ntags, function ($a, $b) { return $a['sort'] > $b['sort']; });
-    $ntags = array_map (function ($ntag) use ($tags) { foreach ($tags as $tag) if ($tag['par_id'] == $ntag['id']) array_push ($ntag['subs'], $tag); usort ($ntag['subs'], function ($a, $b) { return $a['sort'] > $b['sort']; }); return $ntag; }, $ntags);
-
-    $works = array_map (function ($work) use ($tags) {
-      $work['tags'] = array_filter (array_map (function ($tag) use ($tags) { foreach ($tags as $t) if ($t['id'] == $tag['id']) return $t; return array (); }, $work['tags']));
-      return $work;
-    }, $works);
-
-    $limit = 9;
-    $total = count ($works);
-
-    if ($total) {
+    if ($total = count (Step::$apis['albums'])) {
       for ($offset = 0; $offset < $total; $offset += $limit) {
-        if (!Step::writeFile (PATH_WORKS . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'works' . PHP, array (
-            '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_WORKS)),
-            '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-            'tags' => $ntags,
-            'works' => array_slice ($works, $offset, $limit),
-            'offset' => $offset,
-            'pagination' => Pagination::initialize (array (
-              'total_rows' => $total, 'per_page' => $limit, 
-              'base_url' => URL_WORKS,
+        $i = 0;
+        $albums = array_slice (Step::$apis['albums'], $offset, $limit);
+        $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
+        try { ImageUtility::photos (array_values (array_filter (array_map (function ($album) { return download_web_file ($album['cover']['c600x315'], PATH_TMP . pathinfo ($album['cover']['c600x315'], PATHINFO_BASENAME)); }, $albums))), $ogimage_path); } catch (Exception $e) { }
+
+        if (!Step::writeFile (PATH_ALBUMS . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($description = TITLE . '有著豐富的活動相簿，你看過 ' . implode (',', Step::columnArray ($albums, 'title')) . ' 了嗎？不知道的朋友沒關係，趕緊來看看吧，說不定會讓你對北港更加了解喔！'), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML),
+              array ('property' => 'og:title', 'content' => '活動相簿' . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($description, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => OA_FB_URL),
+              array ('property' => 'article:modified_time', 'content' => date ('c')),
+              array ('property' => 'article:published_time', 'content' => date ('c')),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_IMG_OG_TMP . $tmpName, 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML),
+              array ('rel' => 'alternate', 'href' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+            "itemListElement" => array_map (function ($album) use ($offset, $i) {
+              return array (
+                  "@type" => "ListItem",
+                  "position" => $offset + $i,
+                  "item" => array (
+                      "@id" => $album['url'],
+                      "name" => $album['title'],
+                      "description" => mb_strimwidth (remove_ckedit_tag ($album['content']), 0, 150, '…','UTF-8'),
+                      "image" => array ('@type' => 'ImageObject', 'url' => $album['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+                      "url" => $album['url'],
+                    )
+                  );
+              }, $albums)
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML, 'title' => '活動相簿')),
+          'css' => css ('css/public' . CSS, 'css/albums' . CSS),
+          'js' => js ('js/public' . JS),
+          'now' => 'albums',
+          'content' => Step::loadView (PATH_VIEWS . 'albums' . PHP, array (
+              'h1' => '活動相簿',
+              'albums' => $albums,
               'offset' => $offset,
-            ))->create_links (),
+              'pagination' => Pagination::initialize (array (
+                  'total_rows' => $total, 'per_page' => $limit, 
+                  'base_url' => URL_ALBUMS,
+                  'offset' => $offset,
+                ))->create_links (),
+            )),
           ))))) Step::error ();
 
         array_push (Step::$sitemapInfos, array (
-          'uri' => '/works/' . (!$offset ? 'index' : $offset) . HTML,
+          'uri' => '/albums/' . (!$offset ? 'index' : $offset) . HTML,
           'priority' => '0.5',
           'changefreq' => 'daily',
           'lastmod' => date ('c'),
         ));
       }
     } else {
-      if (!Step::writeFile (PATH_WORKS . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'works' . PHP, array (
-          '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_WORKS)),
-          '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-          'tags' => $ntags,
-          'works' => [],
-          'offset' => 0,
-          'pagination' => '',
+      if (!Step::writeFile (PATH_ALBUMS . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+                array ('name' => 'keywords', 'content' => KEYWORDS),
+                array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
+                array ('property' => 'og:url', 'content' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML),
+                array ('property' => 'og:title', 'content' => '活動相簿' . ' - ' . TITLE),
+                array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
+                array ('property' => 'article:author', 'content' => OA_FB_URL),
+                array ('property' => 'article:modified_time', 'content' => date ('c')),
+                array ('property' => 'article:published_time', 'content' => date ('c')),
+                array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
+                array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+                array ('property' => 'og:image:width', 'content' => 1200),
+                array ('property' => 'og:image:height', 'content' => 630)
+              ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML),
+              array ('rel' => 'alternate', 'href' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+            "itemListElement" => array_map (function ($album) use ($offset, $i) {
+              return array (
+                  "@type" => "ListItem",
+                  "position" => $offset + $i,
+                  "item" => array (
+                      "@id" => $album['url'],
+                      "name" => $album['title'],
+                      "description" => mb_strimwidth (remove_ckedit_tag ($album['content']), 0, 150, '…','UTF-8'),
+                      "image" => array ('@type' => 'ImageObject', 'url' => $album['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+                      "url" => $album['url'],
+                    )
+                  );
+              }, array ())
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML, 'title' => '活動相簿')),
+          'css' => css ('css/public' . CSS, 'css/albums' . CSS),
+          'js' => js ('js/public' . JS),
+          'now' => 'albums',
+          'content' => Step::loadView (PATH_VIEWS . 'albums' . PHP, array (
+              'h1' => '活動相簿',
+              'albums' => array (),
+              'offset' => 0,
+              'pagination' => '',
+            )),
         ))))) Step::error ();
 
       array_push (Step::$sitemapInfos, array (
-        'uri' => '/works/index' . HTML,
+        'uri' => '/albums/index' . HTML,
         'priority' => '0.5',
         'changefreq' => 'daily',
         'lastmod' => date ('c'),
       ));
     }
 
-    foreach ($tags as $tag) {
-      $total = count ($tag['works']);
-      if (!file_exists ($tag['path'])) Step::mkdir777 ($tag['path']);
+    foreach (Step::$apis['albums'] as $album) {
+      $path = PATH_ALBUM . $album['id'] . '-' . oa_url ($album['title'] . HTML);
 
-      if ($total) {
-        for ($offset = 0; $offset < $total; $offset += $limit) {
-          if (!Step::writeFile ($tag['path'] . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'tag-works' . PHP, array (
-              '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_WORKS)),
-              '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-              'tag' => $tag,
-              'tags' => $ntags,
-              'works' => array_slice ($tag['works'], $offset, $limit),
-              'offset' => $offset,
-              'pagination' => Pagination::initialize (array (
-                  'total_rows' => $total, 'per_page' => $limit, 
-                  'base_url' => $tag['url'],
-                  'offset' => $offset,
-                ))->create_links (),
-            ))))) Step::error ();
-
-          array_push (Step::$sitemapInfos, array (
-            'uri' => '/tags/' . oa_url_encode ($tag['name']) . '/works/' . (!$offset ? 'index' : $offset) . HTML,
-            'priority' => '0.5',
-            'changefreq' => 'daily',
-            'lastmod' => date ('c'),
-          ));
-        }
-      } else {
-        if (!Step::writeFile ($tag['path'] . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'tag-works' . PHP, array (
-            '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_WORKS)),
-            '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-            'tag' => $tag,
-            'tags' => $ntags,
-            'works' => [],
-            'offset' => 0,
-            'pagination' => '',
-          ))))) Step::error ();
-
-        array_push (Step::$sitemapInfos, array (
-          'uri' => '/tags/' . oa_url_encode ($tag['name']) . '/works/index' . HTML,
-          'priority' => '0.5',
-          'changefreq' => 'daily',
-          'lastmod' => date ('c'),
-        ));
-      }
-    }
-
-    foreach ($works as $work) {
-      if (!Step::writeFile ($work['path'], HTMLMin::minify (Step::loadView (PATH_VIEWS . 'work' . PHP, array (
-          '_header' => Step::loadView (PATH_VIEWS . '_header' . PHP, array ('active' => URL_WORKS)),
-          '_footer' => Step::loadView (PATH_VIEWS . '_footer' . PHP),
-          'work' => $work,
+      if (!Step::writeFile ($path, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($album['content'] ? $album['content'] : DESCRIPTION), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => $album['url']),
+              array ('property' => 'og:title', 'content' => $album['title'] . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($album['content'] ? $album['content'] : DESCRIPTION, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => facebook_url ($album['user']['fbid'])),
+              array ('property' => 'article:modified_time', 'content' => date ('c', strtotime ($album['updated_at']))),
+              array ('property' => 'article:published_time', 'content' => date ('c', strtotime ($album['created_at']))),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = $album['cover']['c1200x630'], 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => $album['url']),
+              array ('rel' => 'alternate', 'href' => $album['url'], 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+              '@context' => 'http://schema.org', '@type' => 'Article',
+              'mainEntityOfPage' => array (
+                '@type' => 'WebPage',
+                '@id' => $album['url']),
+              'headline' => $album['title'],
+              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 630, 'width' => 1200),
+              'datePublished' => date ('c', strtotime ($album['created_at'])),
+              'dateModified' => date ('c', strtotime ($album['updated_at'])),
+              'author' => array (
+                  '@type' => 'Person', 'name' => $album['user']['name'], 'url' => facebook_url ($album['user']['fbid']),
+                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url ($album['user']['fbid'], 300, 300), 'height' => 300, 'width' => 300)
+                ),
+              'publisher' => array (
+                  '@type' => 'Organization', 'name' => TITLE,
+                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
+                ),
+              'description' => mb_strimwidth (remove_ckedit_tag ($album['content']), 0, 150, '…','UTF-8')
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_ALBUMS . 'index' . HTML, 'title' => '活動相簿'),
+            array ('url' => $album['url'], 'title' => $album['title'])),
+          
+          'css' => css ('css/public' . CSS, 'css/album' . CSS),
+          'js' => js ('js/public' . JS, 'js/album' . JS),
+          'now' => 'albums',
+          'body_class' => 'album',
+          'last_url' => URL_ALBUMS . 'index' . HTML,
+          'content' => Step::loadView (PATH_VIEWS . 'album' . PHP, array (
+              'album' => $album,
+            )),
         ))))) Step::error ();
 
       array_push (Step::$sitemapInfos, array (
-        'uri' => '/work/' . $work['id'] . '-' . oa_url_encode ($work['title']) . HTML,
+        'uri' => '/album/' . $album['id'] . '-' . oa_url_encode ($album['title']) . HTML,
         'priority' => '0.7',
         'changefreq' => 'daily',
         'lastmod' => date ('c'),
       ));
     }
-    Step::progress ('更新 Works HTML', '完成！');
+    Step::progress ('更新 Albums HTML', '完成！');
+  }
+  public static function writeVideosHtml () {
+    Step::newLine ('-', '更新 Videos HTML');
+
+    $limit = 10;
+    include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
+
+    if ($total = count (Step::$apis['videos'])) {
+      for ($offset = 0; $offset < $total; $offset += $limit) {
+        $i = 0;
+        $videos = array_slice (Step::$apis['videos'], $offset, $limit);
+        $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
+        try { ImageUtility::photos (array_values (array_filter (array_map (function ($video) { return download_web_file (youtube_cover_url ($video['vid']), PATH_TMP . pathinfo (youtube_cover_url ($video['vid']), PATHINFO_BASENAME)); }, $videos))), $ogimage_path); } catch (Exception $e) { }
+
+        if (!Step::writeFile (PATH_VIDEOS . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($description = TITLE . '有著豐富的影音紀錄，你看過 ' . implode (',', Step::columnArray ($videos, 'title')) . ' 了嗎？不知道的朋友沒關係，趕緊來看看吧，說不定會讓你對北港更加了解喔！'), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML),
+              array ('property' => 'og:title', 'content' => '影音紀錄' . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($description, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => OA_FB_URL),
+              array ('property' => 'article:modified_time', 'content' => date ('c')),
+              array ('property' => 'article:published_time', 'content' => date ('c')),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_IMG_OG_TMP . $tmpName, 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML),
+              array ('rel' => 'alternate', 'href' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+            "itemListElement" => array_map (function ($video) use ($offset, $i) {
+              return array (
+                  "@type" => "ListItem",
+                  "position" => $offset + $i,
+                  "item" => array (
+                      "@id" => $video['url'],
+                      "name" => $video['title'],
+                      "description" => mb_strimwidth (remove_ckedit_tag ($video['content']), 0, 150, '…','UTF-8'),
+                      "image" => array ('@type' => 'ImageObject', 'url' => youtube_cover_url ($video['vid']), 'height' => 360, 'width' => 480),
+                      "url" => $video['url'],
+                    )
+                  );
+              }, $videos)
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'title' => '影音紀錄')),
+          'css' => css ('css/public' . CSS, 'css/videos' . CSS),
+          'js' => js ('js/public' . JS),
+          'now' => 'videos',
+          'content' => Step::loadView (PATH_VIEWS . 'videos' . PHP, array (
+              'h1' => '影音紀錄',
+              'videos' => $videos,
+              'offset' => $offset,
+              'pagination' => Pagination::initialize (array (
+                  'total_rows' => $total, 'per_page' => $limit, 
+                  'base_url' => URL_VIDEOS,
+                  'offset' => $offset,
+                ))->create_links (),
+            )),
+          ))))) Step::error ();
+
+        array_push (Step::$sitemapInfos, array (
+          'uri' => '/videos/' . (!$offset ? 'index' : $offset) . HTML,
+          'priority' => '0.5',
+          'changefreq' => 'daily',
+          'lastmod' => date ('c'),
+        ));
+      }
+    } else {
+      if (!Step::writeFile (PATH_VIDEOS . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+                array ('name' => 'keywords', 'content' => KEYWORDS),
+                array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
+                array ('property' => 'og:url', 'content' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML),
+                array ('property' => 'og:title', 'content' => '影音紀錄' . ' - ' . TITLE),
+                array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
+                array ('property' => 'article:author', 'content' => OA_FB_URL),
+                array ('property' => 'article:modified_time', 'content' => date ('c')),
+                array ('property' => 'article:published_time', 'content' => date ('c')),
+                array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
+                array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+                array ('property' => 'og:image:width', 'content' => 1200),
+                array ('property' => 'og:image:height', 'content' => 630)
+              ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML),
+              array ('rel' => 'alternate', 'href' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+            "itemListElement" => array_map (function ($video) use ($offset, $i) {
+              return array (
+                  "@type" => "ListItem",
+                  "position" => $offset + $i,
+                  "item" => array (
+                      "@id" => $video['url'],
+                      "name" => $video['title'],
+                      "description" => mb_strimwidth (remove_ckedit_tag ($video['content']), 0, 150, '…','UTF-8'),
+                      "image" => array ('@type' => 'ImageObject', 'url' => $video['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+                      "url" => $video['url'],
+                    )
+                  );
+              }, array ())
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'title' => '影音紀錄')),
+          'css' => css ('css/public' . CSS, 'css/videos' . CSS),
+          'js' => js ('js/public' . JS, 'js/videos' . JS),
+          'now' => 'videos',
+          'content' => Step::loadView (PATH_VIEWS . 'videos' . PHP, array (
+              'h1' => '影音紀錄',
+              'videos' => array (),
+              'offset' => 0,
+              'pagination' => '',
+            )),
+        ))))) Step::error ();
+
+      array_push (Step::$sitemapInfos, array (
+        'uri' => '/videos/index' . HTML,
+        'priority' => '0.5',
+        'changefreq' => 'daily',
+        'lastmod' => date ('c'),
+      ));
+    }
+
+    foreach (Step::$apis['videos'] as $video) {
+      $path = PATH_VIDEO . $video['id'] . '-' . oa_url ($video['title'] . HTML);
+
+      if (!Step::writeFile ($path, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($video['content'] ? $video['content'] : DESCRIPTION), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => $video['url']),
+              array ('property' => 'og:title', 'content' => $video['title'] . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($video['content'] ? $video['content'] : DESCRIPTION, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => facebook_url ($video['user']['fbid'])),
+              array ('property' => 'article:modified_time', 'content' => date ('c', strtotime ($video['updated_at']))),
+              array ('property' => 'article:published_time', 'content' => date ('c', strtotime ($video['created_at']))),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = youtube_cover_url ($video['vid']), 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 480),
+              array ('property' => 'og:image:height', 'content' => 360)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => $video['url']),
+              array ('rel' => 'alternate', 'href' => $video['url'], 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+              '@context' => 'http://schema.org', '@type' => 'Article',
+              'mainEntityOfPage' => array (
+                '@type' => 'WebPage',
+                '@id' => $video['url']),
+              'headline' => $video['title'],
+              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 480, 'width' => 360),
+              'datePublished' => date ('c', strtotime ($video['created_at'])),
+              'dateModified' => date ('c', strtotime ($video['updated_at'])),
+              'author' => array (
+                  '@type' => 'Person', 'name' => $video['user']['name'], 'url' => facebook_url ($video['user']['fbid']),
+                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url ($video['user']['fbid'], 300, 300), 'height' => 300, 'width' => 300)
+                ),
+              'publisher' => array (
+                  '@type' => 'Organization', 'name' => TITLE,
+                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
+                ),
+              'description' => mb_strimwidth (remove_ckedit_tag ($video['content']), 0, 150, '…','UTF-8')
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => URL_VIDEOS . 'index' . HTML, 'title' => '影音紀錄'),
+            array ('url' => $video['url'], 'title' => $video['title'])),
+          'css' => css ('css/public' . CSS, 'css/article' . CSS),
+          'js' => js ('js/public' . JS, 'js/article' . JS),
+          'now' => 'videos',
+          'last_url' => URL_VIDEOS . 'index' . HTML,
+          'content' => Step::loadView (PATH_VIEWS . 'video' . PHP, array (
+              'video' => $video,
+            )),
+        ))))) Step::error ();
+
+      array_push (Step::$sitemapInfos, array (
+        'uri' => '/video/' . $video['id'] . '-' . oa_url_encode ($video['title']) . HTML,
+        'priority' => '0.7',
+        'changefreq' => 'daily',
+        'lastmod' => date ('c'),
+      ));
+    }
+    Step::progress ('更新 Videos HTML', '完成！');
+  }
+
+  public static function writeGPSHtml () {
+    Step::newLine ('-', '更新 GPS HTML');
+
+    if (!Step::writeFile (PATH . 'gps' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => PAGE_URL_GPS),
+              array ('property' => 'og:title', 'content' => '遶境路關' . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => OA_FB_URL),
+              array ('property' => 'article:modified_time', 'content' => date ('c')),
+              array ('property' => 'article:published_time', 'content' => date ('c')),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => PAGE_URL_GPS),
+              array ('rel' => 'alternate', 'href' => PAGE_URL_GPS, 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+              '@context' => 'http://schema.org', '@type' => 'Article',
+              'mainEntityOfPage' => array (
+                '@type' => 'WebPage',
+                '@id' => PAGE_URL_GPS),
+              'headline' => '遶境路關',
+              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 630, 'width' => 1200),
+              'datePublished' => date ('c'),
+              'dateModified' => date ('c'),
+              'author' => array (
+                  '@type' => 'Person', 'name' => OA, 'url' => facebook_url (OA_FB_UID),
+                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url (OA_FB_UID, 300, 300), 'height' => 300, 'width' => 300)
+                ),
+              'publisher' => array (
+                  '@type' => 'Organization', 'name' => TITLE,
+                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
+                ),
+              'description' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => PAGE_URL_GPS, 'title' => '遶境路關')),
+          'css' => css ('css/public' . CSS, 'css/gps' . CSS),
+          'js' => js ('js/public' . JS, 'js/gps' . JS),
+          'body_class' => 'maps',
+          'now' => 'gps',
+          'content' => Step::loadView (PATH_VIEWS . 'gps' . PHP, array (
+              'h1' => '遶境路關',
+              'struct' => Step::$apis['paths']['struct'],
+              'paths' => Step::$apis['paths']['paths'],
+              'infos' => Step::$apis['paths']['infos'],
+            )),
+        ))))) Step::error ();
+
+    array_push (Step::$sitemapInfos, array (
+      'uri' => '/' . 'gps' . HTML,
+      'priority' => '0.5',
+      'changefreq' => 'weekly',
+      'lastmod' => date ('c'),
+    ));
+
+    Step::progress ('更新 GPS HTML', '完成！');
+  }
+  public static function writeSearchHtml () {
+    Step::newLine ('-', '更新 Search HTML');
+
+    if (!Step::writeFile (PATH . 'js' . DIRECTORY_SEPARATOR . 'data' . JS, 'window._mazu=' . json_encode (array (
+        array ('group' => '文章',
+          'datas' => array_map (function ($article) {
+            return array (
+                'user' => $article['user'],
+                'url' => $article['url'],
+                'pic' => $article['cover']['c600x315'],
+                'title' => $article['title'],
+                'content' => remove_ckedit_tag ($article['content']),
+              );
+          }, Step::$apis['articles'])),
+        array ('group' => '相簿',
+        'datas' => array_map (function ($album) {
+            return array (
+                'user' => $album['user'],
+                'url' => $album['url'],
+                'pic' => $album['cover']['c600x315'],
+                'title' => $album['title'],
+                'content' => remove_ckedit_tag ($album['content']) . implode (' ', Step::columnArray ($album['images'], 'title')),
+              );
+          }, Step::$apis['albums'])),
+        array ('group' => '影音',
+          'datas' => array_map (function ($album) {
+            return array (
+                'user' => $album['user'],
+                'url' => $album['url'],
+                'pic' => youtube_cover_url ($album['vid']),
+                'title' => $album['title'],
+                'content' => remove_ckedit_tag ($album['content']),
+              );
+          }, Step::$apis['videos'])),
+        array ('group' => '其他',
+          'datas' => array (
+              array (
+                  'user' => Step::$apis['author']['user'],
+                  'url' => PAGE_URL_AUTHOR,
+                  'pic' => Step::$apis['author']['cover']['c600x315'],
+                  'title' => Step::$apis['author']['title'],
+                  'content' => remove_ckedit_tag (Step::$apis['author']['content']),
+                ),
+              array (
+                  'user' => Step::$apis['license']['user'],
+                  'url' => PAGE_URL_LICENSE,
+                  'pic' => Step::$apis['license']['cover']['c600x315'],
+                  'title' => Step::$apis['license']['title'],
+                  'content' => remove_ckedit_tag (Step::$apis['license']['content']),
+                ),
+            ))
+      )))) Step::error ();
+
+    if (!Step::writeFile (PATH . 'search' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+          'meta' => meta (
+              array ('name' => 'keywords', 'content' => KEYWORDS),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
+              array ('property' => 'og:url', 'content' => PAGE_URL_SEARCH),
+              array ('property' => 'og:title', 'content' => '快速搜尋' . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'article:author', 'content' => OA_FB_URL),
+              array ('property' => 'article:modified_time', 'content' => date ('c')),
+              array ('property' => 'article:published_time', 'content' => date ('c')),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
+              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
+              array ('property' => 'og:image:width', 'content' => 1200),
+              array ('property' => 'og:image:height', 'content' => 630)
+            ),
+          'link' => myLink (
+              array ('rel' => 'canonical', 'href' => PAGE_URL_SEARCH),
+              array ('rel' => 'alternate', 'href' => PAGE_URL_SEARCH, 'hreflang' => 'zh-Hant')
+            ),
+          'jsonLd' => array (
+              '@context' => 'http://schema.org', '@type' => 'Article',
+              'mainEntityOfPage' => array (
+                '@type' => 'WebPage',
+                '@id' => PAGE_URL_SEARCH),
+              'headline' => '快速搜尋',
+              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 630, 'width' => 1200),
+              'datePublished' => date ('c'),
+              'dateModified' => date ('c'),
+              'author' => array (
+                  '@type' => 'Person', 'name' => OA, 'url' => facebook_url (OA_FB_UID),
+                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url (OA_FB_UID, 300, 300), 'height' => 300, 'width' => 300)
+                ),
+              'publisher' => array (
+                  '@type' => 'Organization', 'name' => TITLE,
+                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
+                ),
+              'description' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')
+            ),
+          'scopes' => array (
+            array ('url' => URL, 'title' => TITLE),
+            array ('url' => PAGE_URL_SEARCH, 'title' => '快速搜尋')),
+
+          'css' => css ('css/public' . CSS, 'css/search' . CSS),
+          'js' => js ('js/public' . JS, 'js/data' . JS, 'js/search' . JS),
+          'now' => 'search',
+          'content' => Step::loadView (PATH_VIEWS . 'search' . PHP, array (
+              'h1' => '快速搜尋',
+            )),
+        ))))) Step::error ();
+
+    Step::progress ('更新 Search HTML', '完成！');
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public static function columnArray ($objects, $key) {
+    return array_map (function ($object) use ($key) {
+      return !is_array ($object) ? is_object ($object) ? $object->$key : $object : $object[$key];
+    }, $objects);
   }
 
   public static function writeSitemap () {
@@ -714,7 +1617,7 @@ class Step {
     Step::progress ('更新 Sitemap', '完成！');
   }
   public static function cleanBuild () {
-    Step::newLine ('-', '清除 上一次 檔案', count ($paths = array (PATH_ASSET, PATH_SITEMAP, PATH_ARTICLES, PATH_WORKS, PATH_TAGS, PATH_ARTICLE, PATH_WORK)));
+    Step::newLine ('-', '清除 上一次 檔案', count ($paths = array (PATH_ASSET, PATH_SITEMAP, PATH_ARTICLES, PATH_VIDEOS, PATH_ALBUMS, PATH_ALBUM, PATH_VIDEOS, PATH_VIDEO, PATH_TAGS, PATH_ARTICLE, PATH_TMP, PATH_IMG_OG_TMP)));
     foreach ($paths as $path) {
       Step::directoryDelete ($path, false);
       Step::progress ('清除 上一次 檔案');
