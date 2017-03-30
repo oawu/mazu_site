@@ -1617,11 +1617,17 @@ class Step {
     Step::progress ('更新 Sitemap', '完成！');
   }
   public static function cleanBuild () {
-    Step::newLine ('-', '清除 上一次 檔案', count ($paths = array (PATH_ASSET, PATH_SITEMAP, PATH_ARTICLES, PATH_VIDEOS, PATH_ALBUMS, PATH_ALBUM, PATH_VIDEOS, PATH_VIDEO, PATH_TAGS, PATH_ARTICLE, PATH_TMP, PATH_IMG_OG_TMP)));
+    Step::newLine ('-', '清除 上一次 檔案', count ($files = array ('js' . DIRECTORY_SEPARATOR . 'data' . JS, 'index' . HTML, 'gps' . HTML, 'license' . HTML, 'search' . HTML, 'author' . HTML)) + count ($paths = array (PATH_ASSET, PATH_SITEMAP, PATH_ARTICLES, PATH_VIDEOS, PATH_ALBUMS, PATH_ALBUM, PATH_VIDEOS, PATH_VIDEO, PATH_TAGS, PATH_ARTICLE, PATH_TMP, PATH_IMG_OG_TMP)));
+
     foreach ($paths as $path) {
       Step::directoryDelete ($path, false);
       Step::progress ('清除 上一次 檔案');
     }
+    foreach ($files as $file) {
+      @unlink (PATH . $file);
+      Step::progress ('清除 上一次 檔案');
+    }
+
     Step::progress ('清除 上一次 檔案', '完成！');
   }
   public static function directoryDelete ($dir, $is_root = true) {
