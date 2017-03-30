@@ -1329,7 +1329,7 @@ class Step {
             array ('url' => URL, 'title' => TITLE),
             array ('url' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'title' => '影音紀錄')),
           'css' => css ('css/public' . CSS, 'css/videos' . CSS),
-          'js' => js ('js/public' . JS, 'js/videos' . JS),
+          'js' => js ('js/public' . JS),
           'now' => 'videos',
           'content' => Step::loadView (PATH_VIEWS . 'videos' . PHP, array (
               'h1' => '影音紀錄',
