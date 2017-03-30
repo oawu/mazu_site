@@ -44,12 +44,12 @@ class Min {
 
     return true;
   }
-  public static function css () {
-    $list = array_filter (func_get_args ());
+  public static function css ($args = array ()) {
+    $list = array_filter ($args);
     return call_user_func_array ('self::asset', array_merge (array ('css'), $list));
   }
-  public static function js () {
-    $list = array_filter (func_get_args ());
+  public static function js ($args = array ()) {
+    $list = array_filter ($args);
     return call_user_func_array ('self::asset', array_merge (array ('js'), $list));
   }
   public static function readFile ($file) {

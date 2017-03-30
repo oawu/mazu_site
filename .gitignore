@@ -13,11 +13,13 @@ cmd/verify.php
 
 /articles/*
 /article/*
-
-/maps/*
-
+/album/*
+/albums/*
 /videos/*
-/images/*
+/video/*
+/img/og/tmp/*
+/tmp/*
+/tags/*
 
 /asset/*
 /api

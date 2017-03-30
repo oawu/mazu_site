@@ -1,0 +1,248 @@
+/**
+ * @author      OA Wu <comdan66@gmail.com>
+ * @copyright   Copyright (c) 2016 OA Wu Design
+ */
+
+@import "_oa";
+
+#container {
+  @include range-width(0, 500px) {
+    width: 100%;
+    margin-bottom: 0;
+  }
+}
+#article {
+  position: relative;
+  display: block;
+  width: calc(100% - 15px);
+  max-width: 640px;
+  background-color: rgba(255, 255, 255, 1.00);
+  @include box-shadow(0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24));
+  
+  margin: 0 auto;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  @include range-width(0, 500px) {
+    margin-top: 0;
+    margin-bottom: 0;
+    width: 100%;
+    padding-top: 5px;
+  }
+  @include range-width(500px, 640px) {
+    width: 100%;
+    margin-top: 15px;
+  }
+  @include range-width(640px, 800px) {
+
+  }
+  @include range-width(800px, 900px) {
+    margin-left: 15px;
+    margin-right: 0;
+  }
+  > nav {
+    display: inline-block;
+    width: 100%;
+    padding: 15px;
+    padding-bottom: 0;
+    @include clearfix();
+    > * {
+      display: inline-block;
+      float: left;
+      height: 40px;
+      line-height: 40px;
+      font-size: 14px;
+      color: rgba(75, 75, 75, 1.00);
+      + * {
+        margin-left: 5px;
+
+      }
+    }
+    .user {
+      width: 40px;
+      @include border-radius(50%);
+    }
+    > i {
+      width: 15px;
+      line-height: 40px;
+      font-style: normal;
+    }
+    .name {
+      max-width: 75px;
+      text-align: left;
+    }
+    .title {
+      text-align: left;
+      width: 100%;
+      max-width: calc(100% - 75px - 40px - 15px - 10px - 90px - 5px - 20px - 30px);
+      @include range-width(0, 420px){
+        max-width: calc(100% - 75px - 65px - 30px);
+      }
+      @include range-width(420px, 475px){
+        max-width: calc(100% - 75px - 40px - 15px - 10px - 70px - 5px - 20px - 30px);
+      }
+      min-width: 100px;
+      margin: 0;
+      padding: 0;
+      margin-left: 5px;
+      @include overflow-docx3();
+    }
+    .tag {
+      max-width: 90px;
+      @include range-width(0, 420px){
+        display: none;
+        + i {
+          display: none;
+        }
+      }
+      @include range-width(420px, 475px){
+        max-width: 70px;
+      }
+    }
+    .fb-like {
+      float: left;
+      width: 50%;
+      text-align: left;
+      padding-left: 10px;
+      margin: 0;
+      line-height: 38px;
+    }
+    > a {
+      cursor: pointer;
+      text-decoration: none;
+      @include overflow-docx3();
+    }
+    > time {
+      color: rgba(142, 142, 142, 1.00);
+      float: right;
+      font-size: 13px;
+      margin-left: 0;
+      @include overflow-docx3();
+
+      width: 50%;
+      text-align: right;
+      margin: 0;
+      padding-right: 10px;
+      padding-top: 10px;
+    }
+    > label {
+      float: right;
+      width: 35px;
+      cursor: pointer;
+      background-color: white;
+      @include border-radius(2px);
+      @include transition(background-color .3s);
+      @include range-width(0, 475px){
+        margin-left: 0;
+      }
+      &:hover {
+        background-color: rgba(248, 248, 248, 1.00);
+      }
+    }
+    .name {
+      padding-left: 10px;
+      font-weight: bold;
+      @include overflow-docx3();
+    }
+  }
+  > footer {
+    display: inline-block;
+    width: 100%;
+    padding: 20px;
+    border-top: 1px solid rgba(235, 235, 235, 1.00);
+    @include clearfix();
+
+    header {
+      display: inline-block;
+      width: 100%;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+    div {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      height: 20px;
+      line-height: 20px;
+      @include clearfix();
+      padding-left: 20px;
+      &:hover {
+        &:before {
+          @include opacity(1);
+        }
+      }
+      &:before {
+        content: '•';
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: inline-block;
+        width: 20px;
+        height: 100%;
+        @include opacity(.5);
+        @include transition(opacity .3s);
+      }
+      + div {
+        margin-top: 5px;
+      }
+
+      
+      > * {
+        display: inline-block;
+        float: left;
+        @include overflow-docx3();
+
+        &:first-child {
+          @include a(0, false, rgba(52, 106, 255, .800), rgba(52, 106, 255, 1.00));
+          display: inline;
+          max-width: 30%;
+          color: rgba(99, 99, 99, 1.00);
+          &:hover {
+            color: rgba(50, 50, 50, 1.00);
+          }
+          @include range-width(0, 500px){
+            font-size: 13px;
+          }
+          + * {
+            content: '-';
+            display: inline-block;
+            width: 15px;
+            height: 100%;
+            font-style: normal;
+          }  
+        }
+        &:last-child {
+          @include a(1px, false, rgba(52, 106, 255, .800), rgba(52, 106, 255, 1.00));
+          display: inline;
+          max-width: calc(70% - 15px);
+          font-style: italic;
+          font-size: 12px;
+          @include range-width(0, 500px){
+            font-size: 10px;
+          };
+        }
+      }
+    }
+  }
+}
+
+
+.share {
+  position: absolute;
+  top: 15px;
+  @include range-width(0, 500px) {
+    top: 20px;
+  }
+  right: 10px;
+  display: inline-block;
+  width: 35px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+  @include opacity(.75);
+  @include transition(opacity .3s);
+
+  &:hover {
+    @include opacity(1);
+  }
+}

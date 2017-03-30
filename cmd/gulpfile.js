@@ -14,7 +14,8 @@ gulp.task ('default', function () {
 
   ['./root/views/*.php', './*.php', './libs/*.php', './root/css/**/*.css', './root/js/**/*.js'].forEach (function (t) {
     gulp.watch (t).on ('change', function () {
-      gulp.run ('build_dev');
+      gulp.run ('reload');
+      // gulp.run ('build_dev');
     });
   });
 

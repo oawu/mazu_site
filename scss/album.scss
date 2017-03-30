@@ -1,0 +1,476 @@
+/**
+ * @author      OA Wu <comdan66@gmail.com>
+ * @copyright   Copyright (c) 2016 OA Wu Design
+ */
+
+@import "_oa";
+
+body.album {
+  #container {
+    padding-left: 0;
+    width: 100%;
+    max-width: 1200px;
+    overflow: hidden;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    position: relative;
+    height: auto;
+    .l {
+      @include range-width(0, 800px) {
+        width: 100%;
+        height: auto;
+      }
+      @include range-width(800px) {
+        position: fixed;
+        top: $siteHeaderHeight;
+        
+        width: 350px;
+        height: calc(100% - #{$siteHeaderHeight});
+        z-index: 2;
+      }
+      @include range-width(800px, 1200px){
+        left: 0;
+      }
+      @include range-width(1200px){
+        left: calc(50% - 1200px / 2);
+      };
+    }
+    .r {
+      @include range-width(800px) {
+        padding-left: 350px;
+      }
+    }
+
+    .l {
+      
+      display: inline-block;
+
+      background-color: white;
+      text-align: left;
+      @include box-shadow(0 1px 4px 0 rgba(0,0,0,0.14));
+
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+
+      &::-webkit-scrollbar-thumb {
+        background-color: rgba(175, 175, 175, 1.00);
+        @include border-radius(4px);  
+      }
+      &::-webkit-scrollbar {
+        background-color: transparent;
+        width: 8px;
+      }
+
+      >figure {
+        position: relative;
+        margin: 0;
+        height: 200px;
+        z-index: 1;
+
+        figcaption {
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          padding: 5px;
+          display: none;
+          @include opacity(0);
+          @include overflow-docx3();
+        }
+        &:before, &:after {
+          position: absolute;
+          display: inline-block;
+        }
+        &:before {
+          content: '全部 ' attr(data-count) ' 張照片';
+          right: 16px;
+          bottom: 5px;
+          color: white;
+          z-index: 2;
+          font-size: 13px;
+        }
+        &:after {
+          content: '';
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 1;
+          @include background-image(
+                linear-gradient(top, 
+                        rgba(39, 40, 34, 0) 0%,
+                        rgba(39, 40, 34, .2) 50%,
+                        rgba(39, 40, 34, .3) 60%,
+                        rgba(39, 40, 34, .7) 100%
+                ));
+        }
+      }
+      .avatar {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        height: 45px / 2 + 2px;
+        line-height: 45px / 2 + 2px;
+        z-index: 2;
+
+        img {
+          position: absolute;
+          top: 0-45px / 2;
+          left: 10px;
+          display: inline-block;
+          width: 45px;
+          height: 45px;
+          border: 2px solid white;
+          @include border-radius(50%);
+        }
+      }
+      .info {
+        display: inline-block;
+        width: 100%;
+        margin-top: 10px;
+        @include clearfix();
+        padding: 0 15px;
+        
+        > * {
+          float: left;
+          display: inline-block;
+          width: 150px;
+          text-align: right;
+          height: 25px;
+          line-height: 25px;
+          @include overflow-docx3();
+          
+          &:last-child{
+            line-height: 22px;
+          }
+          &:first-child{
+            text-align: left;
+            width: calc(100% - 150px);
+            
+            &:before {
+              display: inline;
+              content: '上傳者 - ';
+              font-size: 12px;
+              line-height: 26px;
+              color: rgba(134, 134, 134, 1.00);
+            }
+            a {
+              @include a;
+              display: inline;
+            }
+          }
+        }
+      }
+      > h1 {
+        display: inline-block;
+        width: 100%;
+        padding: 0 16px;
+        font-size: 22px;
+        @include overflow-docx3();
+      }
+      > section {
+        padding: 0 24px;
+        color: rgba(0,0,0,0.65);
+        font-weight: 300px;
+        font-size: 13px;
+      }
+      > footer {
+        display: inline-block;
+        width: 100%;
+        padding: 0 16px;
+        text-align: right;
+        margin-top: 50px;
+        font-size: 12px;
+        height: 40px;
+        color: rgba(160, 160, 160, 1.00);
+        &:before {
+          content: '-';
+          margin-right: 5px;
+        }
+      }
+    }
+    .r {
+      position: relative;
+      text-align: left;
+
+      #imgs {
+        @include clearfix();
+        padding: 16px;
+        @include range-width(0, 500px){
+          padding: 8px;
+        };
+        ._i {
+          position: relative;
+          overflow: hidden;
+          
+          @include border-radius(2px);
+          @include box-shadow(0 0 10px 1px rgba(0, 0, 0, .1), 0 0 1px rgba(0, 0, 0, .2));
+
+          &:hover {
+            &:before {
+              background-color: rgba(0, 0, 0, .50);
+              @include opacity(1);
+              @include text-shadow(0 0 10px rgba(0, 0, 0, .20), 0 0 1px rgba(0, 0, 0, .50));
+            }
+          }
+          &:before {
+            content: "\e986";
+            font-family: 'icomoon', 'Open sans', Comfortaa, 'Helvetica Neue', Helvetica, Arial, 'Hiragino Maru Gothic ProN', 'メイリオ','ヒラギノ丸ゴ ProN W4', '微軟正黑體', Meiryo, 'Droid Sans';
+            position: absolute;
+            top: -1px;
+            right: -1px;
+            display: none;
+            padding: 10px;
+            color: rgba(255, 255, 255, 1);
+            font-size: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(0, 0, 0, .20);
+            @include border-bottom-left-radius(2px);
+            @include opacity(.55);
+            @include transition(all .3s);
+            @include text-shadow(0 0 10px rgba(0, 0, 0, .20), 0 0 1px rgba(0, 0, 0, .30));
+          }
+          &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            @include range-width(800px){
+              bottom: -100%;
+              @include opacity(0);
+              @include transition(bottom .3s, opacity .3s);
+            }
+            @include background-image(
+                  linear-gradient(top, 
+                          rgba(39, 40, 34, 0 / 2) 0%,
+                          rgba(39, 40, 34, .2 / 2) 50%,
+                          rgba(39, 40, 34, .3 / 2) 60%,
+                          rgba(39, 40, 34, .7 / 2) 100%
+                  ));
+          }
+          figcaption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            display: inline-block;
+            width: 100%;
+            padding: 0 10px;
+            height: 40px;
+            line-height: 40px;
+            color: white;
+            z-index: 2;
+            @include overflow-docx3();
+            // background-color: rgba(0, 0, 0, .3);
+            
+            &:empty {
+              display: none;
+            }
+          }
+          @include range-width(800px) {
+            &:before {
+              display: inline-block;
+            }
+            figcaption {
+              bottom: -40px;
+              @include opacity(0);
+              @include transition(bottom .3s, opacity .3s);
+            }
+            &:hover {
+              &:after {
+                bottom: 0;
+                @include opacity(1);
+              }
+              figcaption {
+                bottom: 0;
+                @include opacity(1);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.pics {
+  display: inline-block;
+  width: 100%;
+  @include clearfix();
+  
+  figure {
+    float: left;
+    display: inline-block;
+    margin: 0;
+  }
+  + .pics {
+    margin-top: 16px;
+    @include range-width(0, 500px){
+      margin-top: 8px;
+    }
+  }
+  &:first-child {
+    margin-top: 0;
+  }
+  &.n1 {
+    figure {
+      width: 100%;
+      @include range-width(0, 400px){ height: 170px; }
+      @include range-width(400px, 500px){ height: 200px; }
+      @include range-width(500px, 800px){ height: 250px; }
+      @include range-width(800px, 1000px){ height: 250px; }
+      @include range-width(1000px){ height: 300px; }
+    }
+  }
+  &.n2 {
+    figure {
+      @include range-width(0, 500px){
+        height: 150px;
+        width: calc(50% - 8px / 2);
+        &:nth-child(2n + 2) {
+          margin-left: 8px;
+        }
+      }
+      @include range-width(0, 400px){
+        height: 120px;
+      }
+      @include range-width(500px){
+        width: calc(50% - 16px / 2);
+        &:nth-child(2n + 2) {
+          margin-left: 16px;
+        }
+      }
+      @include range-width(500px, 650px){ height: 180px; }
+      @include range-width(650px, 800px){ height: 230px; }
+      @include range-width(800px, 1000px){ height: 190px; }
+      @include range-width(1000px, 1200px){ height: 230px; }
+      @include range-width(1200px){ height: 280px; }
+    }
+  }
+  &.n3 {
+    figure {
+      @include range-width(0, 500px){
+        height: 180px;
+        width: calc(50% - 8px / 2);
+        &:nth-child(1) {
+          height: 180px * 2 + 8px;
+        }
+        &:nth-child(n + 2) {
+          margin-left: 8px;
+        }
+        &:nth-child(3) {
+          margin-top: 8px;
+        }
+      }
+      @include range-width(500px, 1000px){
+        height: 180px;
+        width: calc(50% - 16px / 2);
+        &:nth-child(1) {
+          height: 180px * 2 + 16px;
+        }
+        &:nth-child(n + 2) {
+          margin-left: 16px;
+        }
+        &:nth-child(3) {
+          margin-top: 16px;
+        }
+      }
+      @include range-width(1000px, 1200px){
+        height: 230px;
+        width: calc(50% - 16px / 2);
+        &:nth-child(1) {
+          height: 230px * 2 + 16px;
+        }
+        &:nth-child(n + 2) {
+          margin-left: 16px;
+        }
+        &:nth-child(3) {
+          margin-top: 16px;
+        }
+      }
+      @include range-width(1200px){
+        height: 250px;
+        width: calc(50% - 16px / 2);
+        &:nth-child(1) {
+          height: 250px * 2 + 16px;
+        }
+        &:nth-child(n + 2) {
+          margin-left: 16px;
+        }
+        &:nth-child(3) {
+          margin-top: 16px;
+        }
+      }
+    }
+    + .n3 {
+      figure {
+        margin: 0;
+        @include range-width(0, 500px){
+          height: 180px;
+          width: calc(50% - 8px / 2);
+
+          &:nth-child(2) {
+            float: right;
+            height: 180px * 2 + 8px;
+          }
+          &:nth-child(2n + 1) {
+            margin-right: 8px;
+          }
+          &:nth-child(3) {
+            margin-top: 8px;
+          }
+        }
+        @include range-width(500px, 1000px){
+          height: 180px;
+          width: calc(50% - 16px / 2);
+
+          &:nth-child(2) {
+            float: right;
+            height: 180px * 2 + 16px;
+          }
+          &:nth-child(2n + 1) {
+            margin-right: 16px;
+          }
+          &:nth-child(3) {
+            margin-top: 16px;
+          }
+        }
+        @include range-width(1000px, 1200px){
+          height: 230px;
+          width: calc(50% - 16px / 2);
+
+          &:nth-child(2) {
+            float: right;
+            height: 230px * 2 + 16px;
+          }
+          &:nth-child(2n + 1) {
+            margin-right: 16px;
+          }
+          &:nth-child(3) {
+            margin-top: 16px;
+          }
+        }
+        @include range-width(1200px){
+          height: 250px;
+          width: calc(50% - 16px / 2);
+
+          &:nth-child(2) {
+            float: right;
+            height: 250px * 2 + 16px;
+          }
+          &:nth-child(2n + 1) {
+            margin-right: 16px;
+          }
+          &:nth-child(3) {
+            margin-top: 16px;
+          }
+        }
+      }
+    }
+  }
+}

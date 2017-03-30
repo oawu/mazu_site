@@ -1,0 +1,472 @@
+/**
+ * @author      OA Wu <comdan66@gmail.com>
+ * @copyright   Copyright (c) 2016 OA Wu Design
+ */
+
+@import "_oa";
+
+#maps {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 1;
+  a[href^="http://maps.google.com/maps"], a[href^="https://maps.google.com/maps"] {
+    display: none !important;
+  }
+
+  .gmnoprint.gm-bundled-control, .gm-style-cc {
+    display: none;
+  }
+}
+#select {
+  position: relative;
+  z-index: 2;
+  @include input;
+  width: auto;
+  height: 35px;
+  padding-right: 35px;
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+  background-color: transparent;
+
+  overflow: hidden;
+  @include border-radius(3px);
+
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  &::-ms-expand {
+    display: none;
+  }
+}
+
+.if {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  font-size: 12px;
+  @include opacity(1);
+
+  &.o {
+    div {
+      bottom: 10px + 70px;
+    }
+  }
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(156, 31, 16, 1.00);
+    border: 1px solid rgba(110, 22, 11, 1.00);
+    @include border-radius(50%);
+  }
+  div {
+    position: absolute;
+    bottom: 18px;
+    left: (10px - 110px) / 2;
+    display: inline-block;
+    width: 110px;
+    padding: 5px;
+    background-color: rgba(252, 230, 119, 1.00);
+    line-height: 17px;
+    @include border-radius(2px);
+    @include box-shadow(0 0 1px rgba(156, 31, 16, 1.00));
+
+    b {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      color: white;
+      font-weight: normal;
+      background-color: rgba(195, 58, 47, 1.00);
+      @include border-radius(20px / 2);
+    }
+
+    &:after, &:before {
+      top: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    $w: 5px;
+    &:after {
+      border-color: transparent;
+      border-top-color: rgba(252, 230, 119, 1.00);
+      border-width: $w;
+      margin-left: -$w;
+    }
+    &:before {
+      border-color: transparent;
+      border-top-color: rgba(156, 31, 16, .35);
+      border-width: ($w + 1px);
+      margin-left: -($w + 1px);
+    }
+  }
+}
+#select_panel {
+  position: absolute;
+  top: $siteHeaderHeight + 10px;
+  right: 10px;
+  display: inline-block;
+  z-index: 2;
+  background-color: white;
+  overflow: hidden;
+  @include border-radius(3px);
+
+  > label {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    font-style: normal;
+    font-size: 22px;
+    @include opacity(.75);
+    @include transition(opacity .3s);
+    z-index: 1;
+  }
+  &:hover {
+    > label {
+      &:hover {
+        @include opacity(1);
+      }
+    }
+  }
+}
+
+#z a, #o, #fzd {
+  color: #6f6f6f;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: white;
+  @include transition(color .3s);
+  
+  &:hover {
+    color: #323232;
+  }
+}
+
+#z {
+  position: absolute;
+  bottom: 21px + 10px;
+  @include range-width(0, 370px) {
+    bottom: 10px;
+  }
+  right: 10px;
+  display: inline-block;
+  width: 35px;
+  height: 35px * 2 + 1px;
+  z-index: 20;
+  background-color: white;
+  padding-left: 4px;
+  padding-right: 4px;
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+  @include border-radius(3px);
+  
+  &:after {
+    content: '';
+    position: absolute;
+    top: 35px + 1px;
+    left: 5px;
+    display: inline-block;
+    width: calc(100% - 5px * 2);
+    height: 1px;
+    background-color: #dcdcdc;
+
+  }
+  a {
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+  }
+}
+
+#f {
+  position: fixed;
+  @include range-width(0, 370px) {
+    bottom: 10px + 35px + 10px;
+  }
+  right: 10px + 35px + 10px;
+  bottom: 21px + 10px + 35px + 10px;
+  z-index: 20;
+  display: inline-block;
+}
+
+#o {
+  position: absolute;
+  right: 10px;
+  bottom: 21px + 10px + 35px * 2 + 1px + 10px;
+  @include range-width(0, 370px) {
+    bottom: 10px + 35px * 2 + 1px + 10px;
+  }
+  display: none;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 4px;
+  z-index: 20;
+
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+  @include border-radius(3px);
+  
+  &.l {
+    cursor: not-allowed;
+    @include opacity(.4);
+  }
+  &.s {
+    display: inline-block;
+  }
+}
+.mz {
+  position: absolute;
+  display: inline-block;
+  width: 40px;
+  height: 70px;
+
+  &:before, &:after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    display: inline-block;
+    width: 100%;
+    height: 10px;
+    z-index: 1;
+    @include border-radius(50%);
+  }
+  &:before {
+    background-color: rgba(39, 40, 34, .250);
+    @include scale(1);
+    z-index: 2;
+  }
+  &:after {
+    background-color: rgba(156, 31, 16, 1.00);
+    @include animation(m 3s infinite cubic-bezier(0.145, 0.670, 0.170, 0.890));
+  }
+  img {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+  }
+}
+
+@include keyframes(m){
+  0%{
+    background-color: rgba(156, 31, 16, 1.00);
+    @include scale(1);
+    @include opacity(1);
+  }
+  100% {
+    background-color: rgba(156, 31, 16, .0);
+    @include scale(3);
+    @include opacity(0);
+  }
+}
+
+
+#l {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 21px;
+  line-height: 22px;
+  font-family: Roboto, Arial, sans-serif;
+  z-index: 20;
+  background-color: white;
+  font-size: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  @include box-shadow(0 0 4px rgba(0, 0, 0, 0.15));
+  @include border-top-left-radius(3px);
+  @include opacity(.85);
+  @include clearfix();
+  
+  @include range-width(0, 370px) {
+    display: none;
+  };
+  
+  a {
+    @include a;
+    cursor: pointer;
+  }
+  * {
+    position: relative;
+    float: left;
+    display: inline-block;
+
+    + * {
+      margin-left: 10px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0 - 10px / 2;
+        top: 5px;
+        width: 1px;
+        height: calc(100% - 5px * 2);
+        background-color: #c8c8c8;
+      }
+    }
+  }
+}
+
+.my {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border: 3px solid white;
+  @include border-radius(50%);
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+  
+  img {
+    width: 100%;
+  }
+}
+
+#fzd {
+  position: fixed;
+  right: 10px + 35px + 10px;
+  display: inline-block;
+  // width: 35px;
+  padding: 0 13px;
+  font-weight: normal;
+  height: 35px;
+  line-height: 35px;
+  z-index: 20;
+  cursor: pointer;
+  color: rgba(50, 50, 50, 0.8);
+  background-color: white;
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+  @include border-radius(3px);
+  @include transition(color .3s);
+
+  bottom: 21px + 10px;
+  @include range-width(0, 370px) {
+    bottom: 10px;
+  }
+  label {
+    margin-top: 7px;
+    margin-left: 3px;
+  }
+  span {
+    margin-left: 5px;
+  }
+}
+.sw {
+  $switch-w: 20px;
+  $switch-l: 40px;
+  $switch-lw: 4px;
+  position: relative;
+  display: inline-block;
+  width: $switch-l;
+  height: $switch-w;
+  cursor: pointer;
+  
+  &:not(.l) {
+    input {
+      &:checked {
+        ~ span {
+          &:before {
+            background-color: rgba(37, 184, 153, 1.00);
+            border-color: rgb(38, 185, 154);
+            @include box-shadow(inset 0px 0px 0px 11px rgba(38, 185, 154, 1));
+          }
+          &:after {
+            left: $switch-l + 1px - $switch-w;
+          }
+        }
+      }
+    }
+  }
+  &.l {
+    cursor: not-allowed;
+
+    span {
+      width: $switch-w;
+      height: $switch-w;
+
+      &:before {
+        border-width: 0;
+        @include box-shadow(inset 0 0 1px rgba(0, 0, 0, .15));
+        @include border-radius(50%);
+        @include background-image(linear-gradient(rgba(184, 241, 148, 1.00) 0%, rgba(89, 178, 169, 1.00) 100%));
+        @include animation(rotate 1s linear infinite);
+        z-index: 1;
+      }
+      &:after {
+        left: $switch-lw;
+        top: $switch-lw;
+        background-color: rgba(255, 255, 255, 1.00);
+        width: calc(100% - #{$switch-lw} * 2);
+        height: calc(100% - #{$switch-lw} * 2);
+        @include border-radius(50%);
+        @include box-shadow(0 0 1px rgba(0, 0, 0, .1));
+        z-index: 2;
+      }
+    }
+  }
+  span {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    width: $switch-l;
+    height: $switch-w;
+    overflow: hidden;
+    @include border-radius($switch-w / 2);
+
+    &:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      border: 1px solid rgba(223, 223, 223, 1.00);
+      @include border-radius($switch-w / 2);
+      @include box-shadow(inset 0px 0px 0px 0px rgba(223, 223, 223, 1));
+      @include transition(box-shadow 0.4s, background-color .2s);
+    }
+    &:after {
+      content: '';
+      position: absolute;
+      left: 1px;
+      top: 1px;
+      display: inline-block;
+      width: $switch-w - 1px * 2;
+      height: $switch-w - 1px * 2;
+      @include border-radius(50%);
+      @include transition(background-color 0.4s, left 0.2s);
+      @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.4));
+      background-color: rgba(255, 255, 255, 1.00);  
+    }
+  }
+  input {
+    position: absolute;
+    @include opacity(0);
+  }
+}

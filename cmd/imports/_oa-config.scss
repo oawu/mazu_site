@@ -4,23 +4,8 @@
  */
 
 
-$mainAdminWidth: 2600px !global;
+$siteHeaderHeight: 55px !global;
 $mainWidth: 1100px !global;
-
-$mediaMiniMobileWidth: 384px !global;
-$mediaMobileWidth: 640px !global;
-$mediaTabletWidth: 960px !global;
-
-$changeWidth: 768px !global;
-
-$navHeight: 65px !global;
-$wrapperLeftWidth: 230px !global;
-$wrapperLeftMobileWidth: 230px !global;
-$msgHeight: 40px !global;
-$tabHeight: 45px !global;
-
-$mainBackgroundColor: rgba(255, 255, 255, 1) !global;
-$mainBackgroundImage: image-url('bg/grunge.png', false, false) !global;
 
 $btns: (
   'red':  (244, 67, 54),

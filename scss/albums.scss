@@ -1,0 +1,171 @@
+/**
+ * @author      OA Wu <comdan66@gmail.com>
+ * @copyright   Copyright (c) 2016 OA Wu Design
+ */
+
+@import "_oa";
+#content {
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 15px;
+  padding-top: 24px;
+  
+  @include range-width(0, 500px) {
+    padding: 0;
+    padding-top: 12px;
+  }
+  @include range-width(500px, 800px) {
+    padding: 10px;
+    padding-top: 20px;
+  }
+  @include clearfix();
+
+  a {
+    position: relative;
+    float: left;
+    margin: 0;
+    @include box-shadow(0 1px 4px 0 rgba(0,0,0,0.16));
+    overflow: hidden;
+    padding-bottom: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    background-color: white;
+    @include border-radius(2px);
+    @include transition(box-shadow .3s);
+
+    @include range-width(0, 400px){
+      height: 200px;
+      width: calc(100% / 2 - (12px * (2 - 1)) / 2);
+      &:not(:nth-child(2n + 1)) { margin-left: 12px; }
+      &:nth-child(n + 3) { margin-top: 12px; } 
+    }
+    @include range-width(400px, 500px){
+      height: 220px;
+      width: calc(100% / 2 - (12px * (2 - 1)) / 2);
+      &:not(:nth-child(2n + 1)) { margin-left: 12px; }
+      &:nth-child(n + 3) { margin-top: 12px; } 
+    }
+    @include range-width(500px, 630px){
+      height: 220px;
+      width: calc(100% / 2 - (24px * (2 - 1)) / 2);
+      &:not(:nth-child(2n + 1)) { margin-left: 24px; }
+      &:nth-child(n + 3) { margin-top: 24px; } 
+    }
+    @include range-width(630px, 800px){
+      height: 220px;
+      width: calc(100% / 3 - (24px * (3 - 1)) / 3);
+      &:not(:nth-child(3n + 1)) { margin-left: 24px; }
+      &:nth-child(n + 4) { margin-top: 24px; }
+    }
+    @include range-width(800px, 900px){
+      height: 220px;
+      width: calc(100% / 2 - (24px * (2 - 1)) / 2);
+      &:not(:nth-child(2n + 1)) { margin-left: 24px; }
+      &:nth-child(n + 3) { margin-top: 24px; } 
+    }
+    @include range-width(900px, 1100px){
+      height: 220px;
+      width: calc(100% / 3 - (24px * (3 - 1)) / 3);
+      &:not(:nth-child(3n + 1)) { margin-left: 24px; }
+      &:nth-child(n + 4) { margin-top: 24px; }
+    };
+    @include range-width(1100px){
+      height: 220px;
+      width: calc(100% / 4 - (24px * (4 - 1)) / 4);
+      &:not(:nth-child(4n + 1)) { margin-left: 24px; }
+      &:nth-child(n + 5) { margin-top: 24px; }
+
+    };
+    &:hover {
+      @include box-shadow(0 0 6px 0 rgba(0,0,0,0.1), 0 1px 4px 0 rgba(0,0,0,0.16));
+    }
+    figure {
+      position: relative;
+      margin: 0;
+      height: calc(100% - (24px * 2 + 16px));
+      overflow: hidden;
+      margin-bottom: 16px;
+      @include border-top-radius(2px);
+      &:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        @include background-image(
+              linear-gradient(top, 
+                      rgba(39, 40, 34, 0 / 2) 0%,
+                      rgba(39, 40, 34, .2 / 2) 50%,
+                      rgba(39, 40, 34, .3 / 2) 60%,
+                      rgba(39, 40, 34, .7 / 2) 100%
+              ));
+      }
+      
+      > * {
+        position: absolute;
+        display: inline-block;
+      }
+      figcaption {
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 5px;
+        display: none;
+        @include opacity(0);
+        @include overflow-docx3();
+      }
+      div {
+        top: 10px;
+        right: 10px;
+        padding: 0 5px;
+        height: 17px;
+        line-height: 17px;
+        font-size: 13px;
+        background-color: rgba(39,40,34,0.5);
+        color: #e6e6e6;
+
+        @include transition(color .3s);
+        @include text-shadow(0 0 5px rgba(39,40,34,0.7));
+        @include border-radius(20px);
+        &:before {
+          margin-right: 3px;
+        }
+      }
+    }
+    .a {
+      position: absolute;
+      left: 16px;
+      top: calc(100% - (24px * 2 + 16px + 28px));
+      display: inline-block;
+      width: 25px;
+      height: 25px;
+      @include border-radius(50%);
+      border: 1px solid rgba(255, 255, 255, 1);
+      overflow: hidden;
+
+      img {
+        width: 100%;
+      }
+    }
+    .t, .c {
+      display: inline-block;
+      width: 100%;
+      height: 24px;
+      line-height: 24px;
+      text-align: left;
+      padding: 0 16px;
+      @include overflow-docx3();
+    }
+    .t {
+      color: rgba(42, 42, 42, 1.00);
+      font-size: 15px;
+    }
+    .c {
+      color: rgba(122, 122, 122, 1.00);
+      font-size: 12px;
+    }
+  }
+}
