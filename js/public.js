@@ -101,8 +101,8 @@ $(function () {
   window._aa = $('#_aa').length ? $('#_aa').val () : '';
 
   window.apis = {};
-  window.apis.addPv = window._aa . '/api/pv/';
-  window.apis.addLoc = window._aa . '/api/locations/';
+  window.apis.addPv = window._aa + '/api/pv/';
+  window.apis.addLoc = window._aa + '/api/locations/';
 
   window.func = {};
   window.func.addPv = function (orm, id) {
