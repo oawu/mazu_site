@@ -98,9 +98,11 @@ $(function () {
     window.open ('https://www.facebook.com/sharer/sharer.php?u=' + url, '分享', 'scrollbars=yes,resizable=yes,toolbar=no,location=yes,width=550,height=420,top=100,left=' + (window.screen ? Math.round(screen.width / 2 - 275) : 100));
   });
 
+  window.env = $('#env').length ? $('#env').val () : 'dev';
+
   window.apis = {};
-  window.apis.addPv = 'https://dev.admin.mazu.ioa.tw/api/pv/';
-  window.apis.addLoc = 'https://dev.admin.mazu.ioa.tw/api/locations/';
+  window.apis.addPv = 'https://' + (window.env === 'pro' ? '' : 'dev.') + 'admin.mazu.ioa.tw/api/pv/';
+  window.apis.addLoc = 'https://' + (window.env === 'pro' ? '' : 'dev.') + 'admin.mazu.ioa.tw/api/locations/';
 
   window.func = {};
   window.func.addPv = function (orm, id) {

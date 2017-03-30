@@ -14,6 +14,7 @@
 
   </head>
   <body lang="zh-tw"<?php echo isset ($body_class) && $body_class ? ' class="' . $body_class . '"' : '';?>>
+    <input type='hidden' id='env' value='<?php echo DEV ? 'dev' : 'pro';?>' />
     <input type='checkbox' id='menu_ckb' class='ckb' />
 
     <header id='header'>
