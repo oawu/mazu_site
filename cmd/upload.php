@@ -26,11 +26,17 @@ Step::notCil ();
 Step::init ();
 
 Step::cleanBuild ();
+
+Step::apis ();
 Step::writeIndexHtml ();
-Step::writeAboutHtml ();
-Step::writeContactHtml ();
 Step::writeArticlesHtml ();
-Step::writeWorksHtml ();
+Step::writeGPSHtml ();
+Step::writeAuthorHtml ();
+Step::writeLicenseHtml ();
+Step::writeAlbumsHtml ();
+Step::writeVideosHtml ();
+Step::writeSearchHtml ();
+
 Step::writeSitemap ();
 
 // ---------------
@@ -42,11 +48,15 @@ Step::setUploadDirs (array (
     'asset' => array ('js', 'css'),
     'img' => array ('png', 'jpg', 'jpeg', 'gif', 'svg', 'ico'),
     '' => array ('html', 'txt'),
+    
     'articles' => array ('html'),
     'article' => array ('html'),
-    'maps' => array ('html'),
+    'album' => array ('html'),
+    'albums' => array ('html'),
     'videos' => array ('html'),
-    'images' => array ('html'),
+    'video' => array ('html'),
+    'tags' => array ('html'),
+
     'sitemap' => array ('xml'),
   ));
 
