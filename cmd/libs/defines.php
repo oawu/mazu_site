@@ -23,8 +23,8 @@ define ('OA', '吳政賢');
 define ('OA_URL', 'http://www.ioa.tw/');
 define ('OA_FB_URL', 'https://www.facebook.com/comdan66/');
 define ('OA_FB_MAIL', 'comdan66@gmail.com');
-define ('OA_FB_UID', '1619430491403620');
-define ('FB_APP_ID', '100000100541088');
+define ('OA_FB_UID', '100000100541088');
+define ('FB_APP_ID', '436436213363323');
 define ('FB_ADMIN_ID', OA_FB_UID);
 
 define ('PATH_VIEWS', PATH . 'views' . DIRECTORY_SEPARATOR);
