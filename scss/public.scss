@@ -27,11 +27,8 @@
   @include font-smoothing(antialiased);
 }
 
-.icon-first_page:before {
-  content: "\e5dc";
-}
-.icon-last_page:before {
-  content: "\e5dd";
+.icon-arrow-right:before {
+  content: "\e90c";
 }
 .icon-keyboard_arrow_down:before {
   content: "\e313";
@@ -53,6 +50,12 @@
 }
 .icon-more_vert:before {
   content: "\e5d4";
+}
+.icon-first_page:before {
+  content: "\e5dc";
+}
+.icon-last_page:before {
+  content: "\e5dd";
 }
 .icon-user:before {
   content: "\e900";
@@ -117,6 +120,8 @@
 .icon-f:before {
   content: "\ea90";
 }
+
+
 
 html {
   height: 100%;
@@ -564,9 +569,9 @@ section.section {
   text-align: left;
   padding: 0 25px;
   padding-bottom: 25px;
-  color: rgba(90, 90, 90, 1.00);
-  font-size: 15px;
-  line-height: 23px;
+  color: rgba(75, 75, 75, 1.00);
+  font-size: 14px;
+  line-height: 21px;
   margin-top: 5px;
   li {
     line-height: 20px;
@@ -602,6 +607,7 @@ section.section {
     display: inline;
     margin: 0;
   }
+  
   .line, .split {
     display: inline-block;
     width: calc(100% + 25px * 2);
@@ -733,6 +739,142 @@ section.section {
     }
   }
   
+  ._box_lr {
+    @include clearfix();
+    > div {
+      float: left;
+      @include range-width(0, 500px){
+        width: 100%;
+      }
+      @include range-width(500px){
+        width: calc(50% - 16px / 2);
+      }
+      ul, ol {
+        padding-left: 24px + 8px;
+        
+        + h4 {
+          margin-top: 24px;
+        }
+        li {
+          + li {
+            margin-top: 6px;
+          }
+        }
+      }
+      ul {
+        font-size: 13px;
+      }
+      + div {
+        @include range-width(0, 500px){
+          h4:first-child {
+            margin-top: 24px;
+          }
+        }
+        @include range-width(500px){
+          margin-left: 16px;
+        }
+      }
+    }
+  }
+  h4[data-march19] {
+    display: inline-block;
+    width: 100%;
+    margin: 0;
+    height: 24px;
+    line-height: 24px;
+    @include overflow-docx3();
+    &:after {
+      content: '(' attr(data-march19) ')';
+      color: rgba(186, 66, 53, 1.00);
+      font-size: 12px;
+      font-weight: normal;
+      display: inline;
+      line-height: 24px;
+      margin-left: 4px;
+    }
+  }
+  ol.march19 {
+    padding-left: 24px;
+    font-size: 13px;
+  }
+  ul.march19 {
+    padding-left: 16px;
+    @include clearfix();
+    @include range-width(0, 500px){
+      padding-left: 8px;
+    }
+    li {
+      float: left;
+      display: inline-block;
+      height: 24px;
+      line-height: 24px;
+      
+      font-size: 14px;
+      + li {
+        margin-top: 0;
+      }
+      &.c {
+        color: rgba(184, 61, 48, 1.00);
+      }
+      &:after {
+        content: attr(title);
+        font-size: 12px;
+        margin-left: 2px;
+        @include opacity(.75);
+        @include range-width(0, 500px){
+          display: none;
+        }
+      }
+
+      &:hover {
+        background-color: rgba(220, 55, 43, .2);
+        & + li {
+          background-color: rgba(220, 55, 43, .1);
+        }
+      }
+
+      @include range-width(0, 500px){
+        font-size: 13px;
+        margin-left: -2px;
+      }
+      @include transition(background-color .3s);
+      @include border-radius(2px);
+
+      &:first-child {
+        font-weight: bold;
+        font-size: 15px;
+        @include range-width(0, 500px){
+          font-size: 14px;
+          margin-left: 0;
+          margin-right: 0;
+        }
+
+        &:after {
+          content: ':';
+          @include range-width(0, 500px){
+            display: inline-block;
+          }
+        }
+      }
+
+      + li {
+        &:before {
+          content: "\e90c";
+          font-family: 'icomoon', "微軟正黑體","Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+          margin-right: 5px;
+          margin-left: 0;
+          padding-left: 0;
+          @include opacity(.85);
+          @include range-width(0, 500px){
+            display: inline-block;
+            padding-top: 1px;
+            margin-right: 1px;
+            @include opacity(.35);
+          }
+        }
+      }
+    }
+  }
   .pics {
     display: inline-block;
     width: 100%;
