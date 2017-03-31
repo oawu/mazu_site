@@ -697,14 +697,14 @@ class Step {
     Step::newLine ('-', '更新 Articles HTML');
 
     $limit = 10;
-    include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
+    // include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
 
     if ($total = count (Step::$apis['articles'])) {
       for ($offset = 0; $offset < $total; $offset += $limit) {
         $i = 0;
         $articles = array_slice (Step::$apis['articles'], $offset, $limit);
-        $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
-        try { ImageUtility::photos (array_values (array_filter (array_map (function ($article) { return download_web_file ($article['cover']['c600x315'], PATH_TMP . pathinfo ($article['cover']['c600x315'], PATHINFO_BASENAME)); }, $articles))), $ogimage_path); } catch (Exception $e) { }
+        // $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
+        // try { ImageUtility::photos (array_values (array_filter (array_map (function ($article) { return download_web_file ($article['cover']['c600x315'], PATH_TMP . pathinfo ($article['cover']['c600x315'], PATHINFO_BASENAME)); }, $articles))), $ogimage_path); } catch (Exception $e) { }
 
         if (!Step::writeFile (PATH_ARTICLES . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
           'meta' => meta (
@@ -716,7 +716,7 @@ class Step {
               array ('property' => 'article:author', 'content' => OA_FB_URL),
               array ('property' => 'article:modified_time', 'content' => date ('c')),
               array ('property' => 'article:published_time', 'content' => date ('c')),
-              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_IMG_OG_TMP . $tmpName, 'alt' => TITLE),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
               array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
               array ('property' => 'og:image:width', 'content' => 1200),
               array ('property' => 'og:image:height', 'content' => 630)
@@ -835,7 +835,7 @@ class Step {
           $i = 0;
           $articles = array_slice ($tag['articles'], $offset, $limit);
           $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
-          try { ImageUtility::photos (array_values (array_filter (array_map (function ($article) { return download_web_file (str_replace('https', 'http', $article['cover']['c600x315']), PATH_TMP . pathinfo ($article['cover']['c600x315'], PATHINFO_BASENAME)); }, $articles))), $ogimage_path); } catch (Exception $e) { }
+          // try { ImageUtility::photos (array_values (array_filter (array_map (function ($article) { return download_web_file (str_replace('https', 'http', $article['cover']['c600x315']), PATH_TMP . pathinfo ($article['cover']['c600x315'], PATHINFO_BASENAME)); }, $articles))), $ogimage_path); } catch (Exception $e) { }
 
           if (!Step::writeFile ($tag_path . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
               'meta' => meta (
@@ -1030,14 +1030,14 @@ class Step {
     Step::newLine ('-', '更新 Albums HTML');
 
     $limit = 12;
-    include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
+    // include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
 
     if ($total = count (Step::$apis['albums'])) {
       for ($offset = 0; $offset < $total; $offset += $limit) {
         $i = 0;
         $albums = array_slice (Step::$apis['albums'], $offset, $limit);
-        $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
-        try { ImageUtility::photos (array_values (array_filter (array_map (function ($album) { return download_web_file ($album['cover']['c600x315'], PATH_TMP . pathinfo ($album['cover']['c600x315'], PATHINFO_BASENAME)); }, $albums))), $ogimage_path); } catch (Exception $e) { }
+        // $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
+        // try { ImageUtility::photos (array_values (array_filter (array_map (function ($album) { return download_web_file ($album['cover']['c600x315'], PATH_TMP . pathinfo ($album['cover']['c600x315'], PATHINFO_BASENAME)); }, $albums))), $ogimage_path); } catch (Exception $e) { }
 
         if (!Step::writeFile (PATH_ALBUMS . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
           'meta' => meta (
@@ -1049,7 +1049,7 @@ class Step {
               array ('property' => 'article:author', 'content' => OA_FB_URL),
               array ('property' => 'article:modified_time', 'content' => date ('c')),
               array ('property' => 'article:published_time', 'content' => date ('c')),
-              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_IMG_OG_TMP . $tmpName, 'alt' => TITLE),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
               array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
               array ('property' => 'og:image:width', 'content' => 1200),
               array ('property' => 'og:image:height', 'content' => 630)
@@ -1227,14 +1227,14 @@ class Step {
     Step::newLine ('-', '更新 Videos HTML');
 
     $limit = 10;
-    include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
+    // include_once PATH_CMD_LIBS . DIRECTORY_SEPARATOR . 'image' . DIRECTORY_SEPARATOR . 'ImageUtility.php';
 
     if ($total = count (Step::$apis['videos'])) {
       for ($offset = 0; $offset < $total; $offset += $limit) {
         $i = 0;
         $videos = array_slice (Step::$apis['videos'], $offset, $limit);
-        $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
-        try { ImageUtility::photos (array_values (array_filter (array_map (function ($video) { return download_web_file (youtube_cover_url ($video['vid']), PATH_TMP . pathinfo (youtube_cover_url ($video['vid']), PATHINFO_BASENAME)); }, $videos))), $ogimage_path); } catch (Exception $e) { }
+        // $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
+        // try { ImageUtility::photos (array_values (array_filter (array_map (function ($video) { return download_web_file (youtube_cover_url ($video['vid']), PATH_TMP . pathinfo (youtube_cover_url ($video['vid']), PATHINFO_BASENAME)); }, $videos))), $ogimage_path); } catch (Exception $e) { }
 
         if (!Step::writeFile (PATH_VIDEOS . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
           'meta' => meta (
@@ -1246,7 +1246,7 @@ class Step {
               array ('property' => 'article:author', 'content' => OA_FB_URL),
               array ('property' => 'article:modified_time', 'content' => date ('c')),
               array ('property' => 'article:published_time', 'content' => date ('c')),
-              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_IMG_OG_TMP . $tmpName, 'alt' => TITLE),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
               array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
               array ('property' => 'og:image:width', 'content' => 1200),
               array ('property' => 'og:image:height', 'content' => 630)
