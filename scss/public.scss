@@ -16,7 +16,7 @@
 
 @include font-face("icomoon", font-files("icomoon/fonts/icomoon.eot", "icomoon/fonts/icomoon.woff", "icomoon/fonts/icomoon.ttf", "icomoon/fonts/icomoon.svg"));
 [class^="icon-"], [class*=" icon-"] {
-  font-family: 'icomoon', 'Open sans', Comfortaa, 'Helvetica Neue', Helvetica, Arial, 'Hiragino Maru Gothic ProN', 'メイリオ','ヒラギノ丸ゴ ProN W4', '微軟正黑體', Meiryo, 'Droid Sans';
+  font-family: 'icomoon', "微軟正黑體","Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -27,6 +27,12 @@
   @include font-smoothing(antialiased);
 }
 
+.icon-first_page:before {
+  content: "\e5dc";
+}
+.icon-last_page:before {
+  content: "\e5dd";
+}
 .icon-keyboard_arrow_down:before {
   content: "\e313";
 }
@@ -102,19 +108,15 @@
 .icon-search:before {
   content: "\e986";
 }
+.icon-play2:before {
+  content: "\ea15";
+}
 .icon-share:before {
   content: "\ea7d";
 }
 .icon-f:before {
   content: "\ea90";
 }
-.icon-play2:before {
-  content: "\ea15";
-}
-
-
-
-
 
 html {
   height: 100%;
@@ -127,7 +129,8 @@ html {
     width: 100%;
     min-height: 100%;
     font-size: medium;
-    font-family: 'Open sans', Comfortaa, 'Helvetica Neue', Helvetica, Arial, 'Hiragino Maru Gothic ProN', 'メイリオ','ヒラギノ丸ゴ ProN W4', '微軟正黑體', Meiryo, 'Droid Sans';
+    font-family: "微軟正黑體","Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+    // font-family: "微軟正黑體","Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
     background: rgba(240, 240, 240, 1.00);
     color: rgba(50, 50, 50, 0.8);
 
@@ -554,156 +557,16 @@ body.maps {
     overflow: hidden;
   }
 }
-//   #menu {
-//     @include range-width(800px) {
-//       top: 0;
-//       background-color: white;
-//       height: 0;
-//       padding-top: 0;
-//       overflow: visible;
-//       z-index: 1;
-//       max-height: 400px;
-//       @include opacity(0);
-//       @include border-radius(2px);
-//       @include box-shadow(0 -1px 24px rgba(0,0,0,0.3));
-//       @include transition(height .3s, opacity .3s);
 
-//       &:after {
-//         bottom: 100%;
-//         left: 10px;
-//         border: solid transparent;
-//         content: " ";
-//         height: 0;
-//         width: 0;
-//         position: absolute;
-//         pointer-events: none;
-
-//         border-color: transparent;
-//         border-bottom-color: white;
-//         border-width: 10px;
-//         margin-right: 0 - 10px;
-//       }
-//       > div {
-//         height: 100%;
-//         overflow-y: auto;
-//         -webkit-overflow-scrolling: touch;
-
-//         &::-webkit-scrollbar-thumb {
-//           background-color: rgba(175, 175, 175, 1.00);
-//           @include border-radius(4px);  
-//         }
-//         &::-webkit-scrollbar {
-//           background-color: transparent;
-//           width: 8px;
-//         }
-//       }
-//     }
-//   }
-//   #menu_ckb {
-//     &:checked {
-//       @include range-width(800px) {
-//         ~ #header {
-//           z-index: 200 + 1;
-//         }
-//         ~ #menu {
-//           top: $siteHeaderHeight + 10px;
-//           z-index: 200;
-//           height: calc(100% - #{$siteHeaderHeight + 10px + 10px});
-//           @include opacity(1);
-
-//           + label {
-//             z-index: 200 - 1;
-//             @include opacity(1);
-//             top: 0;
-//             left: 0;
-//             display: inline-block;
-//           }
-//         }
-//       }
-//     }
-//   }
-// }
-
-.pagination {
-  display: inline-block;
-  width: 100%;
-  padding: 10px 0;
-  margin-top: 25px;
-  text-align: center;
-
-  @include range-width(0, 600px){
-    margin-top: 15px;
-  }
-  &:empty {
-    display: none;
-  }
-  > ul {
-    display: inline-block;
-    margin: 0 auto;
-    padding: 0;
-    list-style-type: none;
-    @include clearfix();
-
-    > li {
-      position: relative;
-      float: left;
-      display: inline-block;
-      width: 40px;
-      height: 40px;
-      line-height: 40px;
-      background-color: white;
-      overflow: hidden;
-      @include border-radius(50%);
-      @include box-shadow(0 1px 0 rgba(0,0,0,.12), 0 0 2px rgba(0,0,0,.12));
-      @include transition(box-shadow .3s);
-      
-      @include range-width(0, 600px){
-        display: none;
-        &.f, &.l, &.n, &.p, &.active {
-          display: inline-block;
-          // margin-left: 0;
-          + * {
-            margin-left: 10px;
-          }
-        }
-      }
-      &:hover {
-        @include box-shadow(0 1px 0 rgba(0,0,0,.12), 0 1px 3px 0 rgba(0,0,0,0.3));
-      }
-      &.active {
-        a {
-          color: white;
-        }
-        font-weight: bold;
-        background-color: rgba(219, 68, 55, 1.00);
-        @include box-shadow(0 1px 0 rgba(0,0,0,.12), 0 1px 3px 0 rgba(0,0,0,0.3));
-      }
-      + li {
-        margin-left: 5px;
-      }
-      > a {
-        position: absolute;
-        left: 0;
-        top: 0;
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-        text-decoration: none;
-        color: rgba(125, 125, 125, 1.00);
-
-      }
-    }
-  }
-}
 section.section {
   display: inline-block;
   width: 100%;
   text-align: left;
   padding: 0 25px;
   padding-bottom: 25px;
-  color: rgba(65, 65, 65, 1.00);
-  font-size: 14px;
-  line-height: 21px;
+  color: rgba(90, 90, 90, 1.00);
+  font-size: 15px;
+  line-height: 23px;
   margin-top: 5px;
   li {
     line-height: 20px;
@@ -774,7 +637,7 @@ section.section {
     }
     &:before {
       content: "\e986";
-      font-family: 'icomoon', 'Open sans', Comfortaa, 'Helvetica Neue', Helvetica, Arial, 'Hiragino Maru Gothic ProN', 'メイリオ','ヒラギノ丸ゴ ProN W4', '微軟正黑體', Meiryo, 'Droid Sans';
+      font-family: 'icomoon', "微軟正黑體","Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
       position: absolute;
       top: -1px;
       right: -1px;
@@ -1049,66 +912,6 @@ section.section {
               margin-top: 16px;
             }
           }
-          // @include range-width(0, 500px){
-          //   height: 180px;
-          //   width: calc(50% - 8px / 2);
-
-          //   &:nth-child(2) {
-          //     float: right;
-          //     height: 180px * 2 + 8px;
-          //   }
-          //   &:nth-child(2n + 1) {
-          //     margin-right: 8px;
-          //   }
-          //   &:nth-child(3) {
-          //     margin-top: 8px;
-          //   }
-          // }
-          // @include range-width(500px, 1000px){
-          //   height: 180px;
-          //   width: calc(50% - 16px / 2);
-
-          //   &:nth-child(2) {
-          //     float: right;
-          //     height: 180px * 2 + 16px;
-          //   }
-          //   &:nth-child(2n + 1) {
-          //     margin-right: 16px;
-          //   }
-          //   &:nth-child(3) {
-          //     margin-top: 16px;
-          //   }
-          // }
-          // @include range-width(1000px, 1200px){
-          //   height: 230px;
-          //   width: calc(50% - 16px / 2);
-
-          //   &:nth-child(2) {
-          //     float: right;
-          //     height: 230px * 2 + 16px;
-          //   }
-          //   &:nth-child(2n + 1) {
-          //     margin-right: 16px;
-          //   }
-          //   &:nth-child(3) {
-          //     margin-top: 16px;
-          //   }
-          // }
-          // @include range-width(1200px){
-          //   height: 200px;
-          //   width: calc(50% - 16px / 2);
-
-          //   &:nth-child(2) {
-          //     float: right;
-          //     height: 200px * 2 + 16px;
-          //   }
-          //   &:nth-child(2n + 1) {
-          //     margin-right: 16px;
-          //   }
-          //   &:nth-child(3) {
-          //     margin-top: 16px;
-          //   }
-          // }
         }
       }
     }
@@ -1125,4 +928,304 @@ section.section {
   top: -999px;
   left: -999px;
   @include opacity(0);
+}
+
+
+.pagination {
+  display: inline-block;
+  width: 100%;
+  padding: 0;
+  margin-top: 24px;
+  text-align: right;
+
+  @include range-width(0, 530px){
+    text-align: center;
+    background-color: white;
+    @include border-radius(2px);
+    @include box-shadow(0 1px 2px rgba(0,0,0,0.2));
+  }
+  &:empty {
+    display: none;
+  }
+  > ul {
+    display: inline-block;
+    margin: 0 auto;
+    padding: 0;
+    list-style-type: none;
+    @include clearfix();
+
+    @include range-width(0, 530px){
+      width: 100%;
+    }
+    @include range-width(530px){
+      background-color: white;
+      @include border-radius(2px);
+      @include box-shadow(0 1px 2px rgba(0,0,0,0.2));
+    }
+
+    > li {
+      position: relative;
+      float: left;
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+      text-align: center;
+      overflow: hidden;
+      @include transition(background-color .3s);
+      
+      @include range-width(0, 530px){
+        display: none;
+        width: calc(100% / 3);
+        height: 45px;
+        line-height: 45px;
+
+        // &.f, &.l, 
+        &.n, &.p, &.active {
+          display: inline-block;
+          + * {
+            margin-left: 10px;
+          }
+        }
+        &.active {
+          &:first-child {
+            display: none;
+            ~ li.n {
+              width: 100%;
+              &:before {
+                content: '下一頁';
+              }
+            }
+            ~ li.l {
+              display: none;
+            }
+          }
+        }
+      }
+      &:hover {
+        background-color: rgba(250, 250, 250, 1.00);
+      }
+      &.active {
+        font-weight: bold;
+        @include range-width(530px){
+          background-color: rgba(245, 245, 245, 1.00);
+        }
+        &, a {
+          color: rgba(200, 75, 75, 1.00);
+        }
+      }
+      &, a {
+        font-size: 14px;
+        color: rgba(100, 100, 100, 1.00);
+        &:before {
+          font-size: 16px;
+        }
+      }
+
+      a {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        text-decoration: none;
+      }
+    }
+  }
+}
+
+.other {
+  display: inline-block;
+  width: 100%;
+  padding: 20px;
+  border-top: 1px solid rgba(235, 235, 235, 1.00);
+  @include clearfix();
+
+  > * {
+    float: left;
+  }
+  header {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  > a {
+    margin-top: 4px;
+    overflow: hidden;
+    text-align: left;
+    cursor: pointer;
+    color: rgba(67, 67, 67, 1.00);
+    @include border-radius(2px);
+    @include transition(box-shadow .3s);
+    @include box-shadow(0 0 1px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.24));
+
+    + a {
+      margin-left: 16px;
+    }
+    @include range-width(0, 450px){
+      width: calc(100% + 10px * 2);
+      height: 200px;
+      margin-left: -10px;
+      + a {
+        margin-left: -10px;
+        margin-top: 16px;
+      }
+      &:nth-child(n + 5) {
+        display: none;
+      }
+    }
+    @include range-width(450px, 600px){
+      width: calc(100% / 2 - 16px * 1 / 2);
+      height: 200px;
+      &:nth-child(n + 4) {
+        display: none;
+      }
+    }
+    @include range-width(600px, 650px){
+      width: calc(100% / 2 - 16px * 1 / 2);
+      height: 200px;
+      &:nth-child(n + 4) {
+        display: none;
+      }
+    }
+    @include range-width(650px, 800px){
+      width: calc(100% / 3 - 16px * 2 / 3);
+      height: 200px;
+      &:nth-child(n + 5) {
+        display: none;
+      }
+    };
+    @include range-width(800px, 900px){
+      width: calc(100% / 2 - 16px * 1 / 2);
+      height: 200px;
+      &:nth-child(n + 4) {
+        display: none;
+      }
+    }
+    @include range-width(900px){
+      width: calc(100% / 3 - 16px * 2 / 3);
+      height: 200px;
+      &:nth-child(n + 5) {
+        display: none;
+      }
+    };
+
+    figure {
+      margin: 0;
+      display: inline-block;
+      width: 100%;
+      height: calc(100% - 30px - 8px * 2 - 20px * 2);
+      overflow: hidden;
+
+      img {
+        width: 100%;
+      }
+      figcaption {
+        display: none;
+      }
+    }
+    h3, span {
+      @include transition(opacity .3s);
+    }
+    h3 {
+      height: 30px;
+      line-height: 30px;
+      font-size: 14px;
+      margin: 8px 0;
+      margin-bottom: 0;
+      padding: 0 16px;
+      display: inline-block;
+      max-width: 100%;
+      @include overflow-docx3();
+      @include opacity(.90);
+    }
+    span {
+      display: inline-block;
+      max-width: 100%;
+      padding: 0 16px;
+      height: 20px * 2;
+      line-height: 20px;
+      font-size: 10px;
+      overflow: hidden;
+      @include opacity(.75);
+    }
+    &:hover {
+      @include box-shadow(0 0 1px rgba(0,0,0,.2), 0 1px 4px rgba(0,0,0,.3));
+      h3, span {
+        @include opacity(1);
+      }
+    }
+  }
+  div {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 20px;
+    line-height: 20px;
+    @include clearfix();
+    padding-left: 20px;
+    &:hover {
+      &:before {
+        @include opacity(1);
+      }
+    }
+    &:before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: inline-block;
+      width: 20px;
+      height: 100%;
+      @include opacity(.5);
+      @include transition(opacity .3s);
+    }
+    + div {
+      margin-top: 5px;
+    }
+    + header {
+      margin-top: 25px;
+    }
+
+    
+    > * {
+      display: inline-block;
+      float: left;
+      @include overflow-docx3();
+
+      &:first-child {
+        @include a(0, false, rgba(52, 106, 255, .800), rgba(52, 106, 255, 1.00));
+        display: inline;
+        max-width: 30%;
+        color: rgba(99, 99, 99, 1.00);
+        font-size: 14px;
+        &:hover {
+          color: rgba(50, 50, 50, 1.00);
+        }
+        @include range-width(0, 500px){
+          font-size: 13px;
+        }
+        + * {
+          content: '-';
+          display: inline-block;
+          width: 15px;
+          height: 100%;
+          font-style: normal;
+        }  
+      }
+      &:last-child {
+        @include a(1px, false, rgba(52, 106, 255, .800), rgba(52, 106, 255, 1.00));
+        display: inline;
+        max-width: calc(70% - 15px);
+        font-style: italic;
+        font-size: 12px;
+        @include range-width(0, 500px){
+          font-size: 10px;
+        };
+
+      }
+    }
+  }
 }

@@ -392,7 +392,7 @@ class Step {
       $sourceDir = rtrim ($sourceDir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
 
       while (false !== ($file = readdir ($fp))) {
-        if (!trim ($file, '.') || (($hidden == false) && ($file[0] == '.')) || is_link ($file) || ($file == 'cmd')) continue;
+        if (trim ($file, '.') == '' || (($hidden === false) && ($file[0] === '.')) || is_link ($file) || ($file == 'cmd')) continue;
 
         if ((($directoryDepth < 1) || ($new_depth > 0)) && @is_dir ($sourceDir . $file)) $filedata[$file] = Step::directoryMap ($sourceDir . $file . DIRECTORY_SEPARATOR, $new_depth, $hidden);
         else array_push ($filedata, $file);
@@ -771,7 +771,7 @@ class Step {
           'meta' => meta (
               array ('name' => 'keywords', 'content' => KEYWORDS),
               array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
-              array ('property' => 'og:url', 'content' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML),
+              array ('property' => 'og:url', 'content' => URL_ARTICLES . 'index' . HTML),
               array ('property' => 'og:title', 'content' => '所有文章' . ' - ' . TITLE),
               array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
               array ('property' => 'article:author', 'content' => OA_FB_URL),
@@ -783,15 +783,15 @@ class Step {
               array ('property' => 'og:image:height', 'content' => 630)
             ),
           'link' => myLink (
-              array ('rel' => 'canonical', 'href' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML),
-              array ('rel' => 'alternate', 'href' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+              array ('rel' => 'canonical', 'href' => URL_ARTICLES . 'index' . HTML),
+              array ('rel' => 'alternate', 'href' => URL_ARTICLES . 'index' . HTML, 'hreflang' => 'zh-Hant')
             ),
           'jsonLd' => array (
             '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($article) use ($offset, $i) {
+            "itemListElement" => array_map (function ($article) {
               return array (
                   "@type" => "ListItem",
-                  "position" => $offset + $i,
+                  "position" => 0,
                   "item" => array (
                       "@id" => $article['url'],
                       "name" => $article['title'],
@@ -804,7 +804,7 @@ class Step {
             ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
-            array ('url' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML, 'title' => '所有文章')),
+            array ('url' => URL_ARTICLES . 'index' . HTML, 'title' => '所有文章')),
           'css' => css ('css/public' . CSS, 'css/articles' . CSS),
           'js' => js ('js/public' . JS),
           'now' => 'articles',
@@ -902,7 +902,7 @@ class Step {
               'meta' => meta (
                   array ('name' => 'keywords', 'content' => KEYWORDS),
                   array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
-                  array ('property' => 'og:url', 'content' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML),
+                  array ('property' => 'og:url', 'content' => $tag['url'] . 'index' . HTML),
                   array ('property' => 'og:title', 'content' => $tag['name'] . ' - ' . TITLE),
                   array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
                   array ('property' => 'article:author', 'content' => OA_FB_URL),
@@ -914,15 +914,15 @@ class Step {
                   array ('property' => 'og:image:height', 'content' => 630)
                 ),
               'link' => myLink (
-                  array ('rel' => 'canonical', 'href' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML),
-                  array ('rel' => 'alternate', 'href' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+                  array ('rel' => 'canonical', 'href' => $tag['url'] . 'index' . HTML),
+                  array ('rel' => 'alternate', 'href' => $tag['url'] . 'index' . HTML, 'hreflang' => 'zh-Hant')
                 ),
               'jsonLd' => array (
                 '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-                "itemListElement" => array_map (function ($article) use ($offset, $i) {
+                "itemListElement" => array_map (function ($article) {
                   return array (
                       "@type" => "ListItem",
-                      "position" => $offset + $i,
+                      "position" => 0,
                       "item" => array (
                           "@id" => $article['url'],
                           "name" => $article['title'],
@@ -935,7 +935,7 @@ class Step {
                 ),
               'scopes' => array (
                 array ('url' => URL, 'title' => TITLE),
-                array ('url' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML, 'title' => $tag['name'])),
+                array ('url' => $tag['url'] . 'index' . HTML, 'title' => $tag['name'])),
               'css' => css ('css/public' . CSS, 'css/articles' . CSS),
               'js' => js ('js/public' . JS),
               'now' => 'articles',
@@ -958,6 +958,10 @@ class Step {
 
     foreach (Step::$apis['articles'] as $article) {
       $path = PATH_ARTICLE . $article['id'] . '-' . oa_url ($article['title'] . HTML);
+      $mores = array_filter (Step::$apis['articles'], function ($a) use ($article) {
+          return $a['id'] != $article['id'];
+        });
+      shuffle ($mores);
 
       if (!Step::writeFile ($path, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
           'meta' => meta (
@@ -1005,9 +1009,11 @@ class Step {
           'css' => css ('css/public' . CSS, 'css/article' . CSS),
           'js' => js ('js/public' . JS, 'js/article' . JS),
           'now' => 'articles',
+          'search' => $article['title'],
           'last_url' => URL_ARTICLES . 'index' . HTML,
           'content' => Step::loadView (PATH_VIEWS . 'article' . PHP, array (
               'article' => $article,
+              'mores' => array_slice ($mores, 0, 3)
             )),
         ))))) Step::error ();
 
@@ -1098,7 +1104,7 @@ class Step {
           'meta' => meta (
                 array ('name' => 'keywords', 'content' => KEYWORDS),
                 array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
-                array ('property' => 'og:url', 'content' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML),
+                array ('property' => 'og:url', 'content' => URL_ALBUMS . 'index' . HTML),
                 array ('property' => 'og:title', 'content' => '活動相簿' . ' - ' . TITLE),
                 array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
                 array ('property' => 'article:author', 'content' => OA_FB_URL),
@@ -1110,15 +1116,15 @@ class Step {
                 array ('property' => 'og:image:height', 'content' => 630)
               ),
           'link' => myLink (
-              array ('rel' => 'canonical', 'href' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML),
-              array ('rel' => 'alternate', 'href' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+              array ('rel' => 'canonical', 'href' => URL_ALBUMS . 'index' . HTML),
+              array ('rel' => 'alternate', 'href' => URL_ALBUMS . 'index' . HTML, 'hreflang' => 'zh-Hant')
             ),
           'jsonLd' => array (
             '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($album) use ($offset, $i) {
+            "itemListElement" => array_map (function ($album) {
               return array (
                   "@type" => "ListItem",
-                  "position" => $offset + $i,
+                  "position" => 0,
                   "item" => array (
                       "@id" => $album['url'],
                       "name" => $album['title'],
@@ -1131,7 +1137,7 @@ class Step {
             ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
-            array ('url' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML, 'title' => '活動相簿')),
+            array ('url' => URL_ALBUMS . 'index' . HTML, 'title' => '活動相簿')),
           'css' => css ('css/public' . CSS, 'css/albums' . CSS),
           'js' => js ('js/public' . JS),
           'now' => 'albums',
@@ -1202,6 +1208,7 @@ class Step {
           'now' => 'albums',
           'body_class' => 'album',
           'last_url' => URL_ALBUMS . 'index' . HTML,
+          'search' => $album['title'],
           'content' => Step::loadView (PATH_VIEWS . 'album' . PHP, array (
               'album' => $album,
             )),
@@ -1294,7 +1301,7 @@ class Step {
           'meta' => meta (
                 array ('name' => 'keywords', 'content' => KEYWORDS),
                 array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
-                array ('property' => 'og:url', 'content' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML),
+                array ('property' => 'og:url', 'content' => URL_VIDEOS . 'index' . HTML),
                 array ('property' => 'og:title', 'content' => '影音紀錄' . ' - ' . TITLE),
                 array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
                 array ('property' => 'article:author', 'content' => OA_FB_URL),
@@ -1306,15 +1313,15 @@ class Step {
                 array ('property' => 'og:image:height', 'content' => 630)
               ),
           'link' => myLink (
-              array ('rel' => 'canonical', 'href' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML),
-              array ('rel' => 'alternate', 'href' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
+              array ('rel' => 'canonical', 'href' => URL_VIDEOS . 'index' . HTML),
+              array ('rel' => 'alternate', 'href' => URL_VIDEOS . 'index' . HTML, 'hreflang' => 'zh-Hant')
             ),
           'jsonLd' => array (
             '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($video) use ($offset, $i) {
+            "itemListElement" => array_map (function ($video) {
               return array (
                   "@type" => "ListItem",
-                  "position" => $offset + $i,
+                  "position" => 0,
                   "item" => array (
                       "@id" => $video['url'],
                       "name" => $video['title'],
@@ -1327,7 +1334,7 @@ class Step {
             ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
-            array ('url' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'title' => '影音紀錄')),
+            array ('url' => URL_VIDEOS . 'index' . HTML, 'title' => '影音紀錄')),
           'css' => css ('css/public' . CSS, 'css/videos' . CSS),
           'js' => js ('js/public' . JS),
           'now' => 'videos',
@@ -1349,6 +1356,11 @@ class Step {
 
     foreach (Step::$apis['videos'] as $video) {
       $path = PATH_VIDEO . $video['id'] . '-' . oa_url ($video['title'] . HTML);
+      $mores = array_filter (Step::$apis['videos'], function ($a) use ($video) {
+          return $a['id'] != $video['id'];
+        });
+      shuffle ($mores);
+      
 
       if (!Step::writeFile ($path, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
           'meta' => meta (
@@ -1396,8 +1408,17 @@ class Step {
           'js' => js ('js/public' . JS, 'js/article' . JS),
           'now' => 'videos',
           'last_url' => URL_VIDEOS . 'index' . HTML,
+          'search' => $video['title'],
           'content' => Step::loadView (PATH_VIEWS . 'video' . PHP, array (
               'video' => $video,
+              'mores' => array_map (function ($more) {
+                return array (
+                    'url' => $more['url'],
+                    'cover' => array ('c600x315' => youtube_cover_url ($more['vid'])),
+                    'title' => $more['title'],
+                    'content' => $more['content'],
+                  );
+              }, array_slice ($mores, 0, 3))
             )),
         ))))) Step::error ();
 

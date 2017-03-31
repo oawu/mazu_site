@@ -9,7 +9,7 @@
         <div class="icon-eye"><?php echo $album['pv'];?></div>
       </figure>
       <div class='a _i'><img src='<?php echo avatar_url ($album['user']['fbid']);?>' /></div>
-      <div class='t'>標題</div>
+      <div class='t'><?php echo $album['title'];?></div>
       <div class='c'>共有 <?php echo number_format (count ($album['images']));?> 張照片</div>
     </a>  
 <?php

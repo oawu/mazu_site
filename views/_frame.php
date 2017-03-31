@@ -27,7 +27,7 @@
 
         <a href='<?php echo URL;?>' id='logo'>北港迎媽祖</a>
         <form action='<?php echo PAGE_URL_SEARCH;?>' method='get' class='content'>
-          <input type='text' placeholder='搜尋..' id='search' name='search' />
+          <input type='text' placeholder='搜尋..' id='search' name='search' value='<?php echo isset ($search) && $search ? $search : '';?>' />
           <button type='submit' class='icon-search'></button>
         </form>
         <a id='share' class='icon-share'></a>
@@ -53,7 +53,7 @@
     
 <?php if (isset ($scopes) && $scopes) {
         foreach ($scopes as $scope) { ?>
-          <div class='_scope' itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a itemprop="url" href='<?php echo $scope['url'];?>'><span itemprop="title"><?php echo $scope['title'];?>"></span></a></div>
+          <div class='_scope' itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a itemprop="url" href='<?php echo $scope['url'];?>'><span itemprop="title"><?php echo $scope['title'];?></span></a></div>
   <?php }
       } ?>
 

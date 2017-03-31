@@ -17,7 +17,7 @@
   width: calc(100% - 15px);
   max-width: 640px;
   background-color: rgba(255, 255, 255, 1.00);
-  @include box-shadow(0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24));
+  @include box-shadow(0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24));
   
   margin: 0 auto;
   margin-top: 25px;
@@ -142,85 +142,6 @@
       padding-left: 10px;
       font-weight: bold;
       @include overflow-docx3();
-    }
-  }
-  > footer {
-    display: inline-block;
-    width: 100%;
-    padding: 20px;
-    border-top: 1px solid rgba(235, 235, 235, 1.00);
-    @include clearfix();
-
-    header {
-      display: inline-block;
-      width: 100%;
-      text-align: left;
-      margin-bottom: 10px;
-    }
-    div {
-      position: relative;
-      display: inline-block;
-      width: 100%;
-      height: 20px;
-      line-height: 20px;
-      @include clearfix();
-      padding-left: 20px;
-      &:hover {
-        &:before {
-          @include opacity(1);
-        }
-      }
-      &:before {
-        content: '•';
-        position: absolute;
-        left: 0;
-        top: 0;
-        display: inline-block;
-        width: 20px;
-        height: 100%;
-        @include opacity(.5);
-        @include transition(opacity .3s);
-      }
-      + div {
-        margin-top: 5px;
-      }
-
-      
-      > * {
-        display: inline-block;
-        float: left;
-        @include overflow-docx3();
-
-        &:first-child {
-          @include a(0, false, rgba(52, 106, 255, .800), rgba(52, 106, 255, 1.00));
-          display: inline;
-          max-width: 30%;
-          color: rgba(99, 99, 99, 1.00);
-          &:hover {
-            color: rgba(50, 50, 50, 1.00);
-          }
-          @include range-width(0, 500px){
-            font-size: 13px;
-          }
-          + * {
-            content: '-';
-            display: inline-block;
-            width: 15px;
-            height: 100%;
-            font-style: normal;
-          }  
-        }
-        &:last-child {
-          @include a(1px, false, rgba(52, 106, 255, .800), rgba(52, 106, 255, 1.00));
-          display: inline;
-          max-width: calc(70% - 15px);
-          font-style: italic;
-          font-size: 12px;
-          @include range-width(0, 500px){
-            font-size: 10px;
-          };
-        }
-      }
     }
   }
 }

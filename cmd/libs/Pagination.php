@@ -9,12 +9,12 @@ class Pagination {
 
   private $first_link = '', $last_link = '', $prev_link = '', $next_link = '',
           $full_tag_open = '<ul>', $full_tag_close = '</ul>',
-          $first_tag_open = '<li class="f">', $first_tag_close = '</li>',
+          $first_tag_open = '<li class="f icon-first_page">', $first_tag_close = '</li>',
           $prev_tag_open = '<li class="p icon-keyboard_arrow_left">', $prev_tag_close = '</li>',
           $num_tag_open = '<li>', $num_tag_close = '</li>',
           $cur_tag_open = '<li class="active"><a href="#">', $cur_tag_close = '</a></li>',
           $next_tag_open = '<li class="n icon-keyboard_arrow_right">', $next_tag_close = '</li>',
-          $last_tag_open = '<li class="l">', $last_tag_close = '</li>';
+          $last_tag_open = '<li class="l icon-last_page">', $last_tag_close = '</li>';
 
   private $total_rows         = 0,
           $num_links          = 3,
@@ -69,7 +69,7 @@ class Pagination {
       }
 
       if  ($this->prev_link !== false && $this->cur_page != 1) {
-          $i = (($i = $uri_page_number - $this->per_page) == 0) ? '' : $i;
+          $i = (($i = $uri_page_number - $this->per_page) == 0) ? 'index' : $i;
           $output .= $this->prev_tag_open.'<a href="' . rtrim ($this->base_url, '/') . '/' . $i . $this->suffix . '">' . $this->prev_link . '</a>' . $this->prev_tag_close;
       }
 

@@ -132,7 +132,7 @@ $(function () {
   for (var i = 0; i < $el.length; i++)
     if ($el.eq (i).is ('figure')) figures.push ($el.eq (i).clone (true));
     else if (figures.length) oasort (figures.length).forEach (function (c) { $('<div />').addClass ('pics').addClass ('n' + c).append (figures.splice (0, c)).insertBefore ($el.eq (i)); });
-  if (figures.length) oasort (figures.length).forEach (function (c) { $('<div />').addClass ('pics').addClass ('n' + c).append (figures.splice (0, c)).appendTo ($article.find ('> section')); });
+  if (figures.length) oasort (figures.length).forEach (function (c) { $('<div />').addClass ('pics').addClass ('n' + c).append (figures.splice (0, c)).appendTo ($section); });
 
   $section.find ('> figure').remove ();
   $section.find ('.pics figure').each (function (i) {

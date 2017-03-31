@@ -16,12 +16,28 @@
 
 <?php
   if ($article['sources']) { ?>
-    <footer>
+    <div class='other'>
       <header>相關參考</header>
   <?php foreach ($article['sources'] as $source) { ?>
           <div><a href='<?php echo $source['href'];?>'><?php echo $source['text'];?></a><i>-</i><a href='<?php echo $source['href'];?>'><?php echo $source['href'];?></a></div>
   <?php } ?>
-    </footer>
+    </div>
+<?php
+  }
+  if (isset ($mores) && $mores) { ?>
+    <div class='other'>
+      <header>推薦文章</header>
+  <?php foreach ($mores as $more) { ?>
+          <a href='<?php echo $more['url'];?>'>
+            <figure class='_i'>
+              <img src="<?php echo $more['cover']['c600x315'];?>">
+            <figcaption><?php echo $more['title'];?></figcaption>
+            </figure>
+            <h3><?php echo $more['title'];?></h3>
+            <span><?php echo mb_strimwidth (remove_ckedit_tag ($more['content']), 0, 100, '…','UTF-8');?></span>
+          </a>
+  <?php } ?>
+    </div>
 <?php
   } ?>
 

@@ -63,293 +63,140 @@
   position: relative;
   display: inline-block;
   width: 100%;
-  padding: 10px 15px;
+  padding: 16px;
   background-color: rgba(255, 255, 255, 1.00);
   text-align: left;
-  
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
   @include box-shadow(0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24));
   @include transition(background-color .3s);
-  
-  @include range-width(0, 500px) {
-    margin-top: 10px;
-  }
-  @include range-width(500px, 800px) {
-    margin-top: 15px;
-  }
-  @include range-width(800px) {
-    margin-top: 25px;
-    @include transition(background-color .3s, padding-right .3s);
-  }
-  + .article {
-    margin-top: 0;
-  }
-  &:hover {
-    background-color: rgba(247, 247, 247, 1.00);
-    
-    @include range-width(800px) {
-      padding-right: 50px;
-
-      .more {
-        right: 0;
-        background-color: rgba(247, 247, 247, 1.00);
-      }
-    }
-  }
-  + .article_title {
-    margin-top: 30px;
-  }
   @include clearfix();
-  overflow: hidden;
-
-  .more {
-    position: absolute;
-    right: -50px;
-    top: 0;
+  @include range-width(0, 400px){
+    padding: 0;
+  }
+  > * {
     display: inline-block;
-    height: 100%;
-    width: 50px;
-    line-height: 50px;
-    text-align: center;
-    color: rgba(115, 115, 115, 1.00);
-    background-color: rgba(255, 255, 255, 1.00);
-    @include transition(background-color .3s, right .3s);
-    &:hover {
-      color: rgba(55, 55, 55, 1.00);
+    float: left;
+  }
+  @include range-width(0, 400px){
+    padding-bottom: 16px;
+    @include border-radius(2px);
+    + .article {
+      margin-top: 16px;
     }
   }
-  .avatar {
-    float: left;
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    @include border-radius(50%);
-    overflow: hidden;
 
+  figure {
+    margin: 0;
+    @include range-width(0, 400px){
+      width: 100%;
+      height: 150px;
+    }
+    @include range-width(400px, 600px){
+      width: 100px;
+      height: 75px; 
+    }
+    @include range-width(600px){
+      width: 150px;
+      height: 120px;
+    }
+    overflow: hidden;
+    @include border-radius(2px);
     img {
       width: 100%;
     }
-  }
-  .name {
-    float: left;
-    display: inline-block;
-    width: 130px;
-    height: 30px;
-    line-height: 30px;
-    margin-left: 15px;
-    font-size: 14px;
-    color: rgba(35, 35, 35, 1.00);
-
-    @include clearfix();
-    @include range-width(0, 500px) {
+    figcaption {
       display: none;
     }
-    > span {
-      float: left;
-      display: inline-block;
-      &:nth-child(2) {
-        width: 50px;
-        color: rgba(120, 120, 120, 1.00);
-        font-size: 10px;
-        padding-left: 3px;
-
-        &:before {
-          content: '(';
-        }
-        &:after {
-          content: ')';
-        }
-      }
-      &:nth-child(1) {
-        max-width: calc(100% - 50px);
-      }
-    }
   }
-  .content {
-    float: left;
-    display: inline-block;
-    width: calc(100% - 30px - 15px - 130px - 15px);
-    min-height: 30px;
-    margin-left: 15px;
-    font-size: 14px;
-    padding-top: 5px;
-    line-height: 19px;
-    cursor: pointer;
-    text-decoration: none;
-    @include range-width(0, 500px) {
-      width: calc(100% - 30px - 15px);
+  header, section {
+    @include range-width(0, 400px){
+      width: 100%;
     }
-    // @media screen and (min-width: 0) and (max-width: #{1000px - 1px}) {
-    // width: calc(100% - 30px - 15px - 130px - 15px);
-    // }
-    
-    @include overflow-docx3();
-
-    > span {
-      &:nth-child(1) {
-        color: rgba(55, 55, 55, 1.00);
-      }
-      &:nth-child(2) {
-        color: rgba(128, 128, 128, 1.00);
-        margin-left: 3px;
-        margin-right: 3px;
-        line-height: 16px;
-      }
-      &:nth-child(3) {
-        color: rgba(110, 110, 110, 1.00);
-        font-size: 13px;
-      }
+    @include range-width(600px){
+      width: calc(100% - 150px);
     }
-  }
-  .attachments {
-    padding-left: 30px + 15px + 130px + 15px;
-    @include clearfix();
-
     > * {
-      float: left;
-      display: inline-block;
-
-      + * {
-        margin-left: 7px;
+      display: block;
+      max-width: 100%;
+      @include overflow-docx3();
+    }
+    padding-left: 16px * 1;
+    @include range-width(900px){
+      padding-left: 16px * 2;
+    };
+  }
+  header {
+    @include range-width(0, 400px){
+      padding: 16px;
+    }
+    @include range-width(400px, 600px){
+      width: calc(100% - 100px);
+      height: 75px;
+    }
+  }
+  h3 {
+    height: 33px;
+    margin: 0;
+    line-height: 33px;
+    color: rgba(100, 100, 100, 1.00);
+    padding-right: 85px;
+    @include range-width(0, 400px){
+      padding-right: 0;
+    }
+    @include range-width(400px, 600px){
+      height: 38px;
+      line-height: 38px;
+    }
+  }
+  span {
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    color: rgba(150, 150, 150, 1.00);
+    i {
+      display: inline;
+      line-height: 20px;
+      font-style: normal;
+      &:before {
+        display: inline;
       }
     }
-    @include range-width(0, 500px) {
-      padding-left: 30px + 15px;
-    }
-    .img {
-      width: 0 + 16px * 7;
-      height: 0 + 9px * 7;
-      overflow: hidden;
-      @include border-radius(2px);
-      img {
-        width: 100%;
-      }
-
-      @include range-width(0, 350px) { &:nth-child(n + 3) { display: none; } }
-      @include range-width(350px, 440px) { &:nth-child(n + 4) { display: none; } }
-      @include range-width(0, 465px) { width: 0 + 16px * 5; height: 0 + 9px * 5; }
-      @include range-width(440px, 465px) { &:nth-child(n + 5) { display: none; } }
-      @include range-width(465px, 500px) { &:nth-child(n + 4) { display: none; } }
-      @include range-width(500px, 520px) { display: none; }
-      @include range-width(520px, 640px) { &:nth-child(n + 3) { display: none; } }
-      @include range-width(640px, 760px) { &:nth-child(n + 4) { display: none; } }
-      @include range-width(760px, 800px) { &:nth-child(n + 5) { display: none; } }
-      @include range-width(800px, 840px) { &:nth-child(n + 3) { display: none; } }
-      @include range-width(840px, 960px) { &:nth-child(n + 4) { display: none; } }
-      @include range-width(960px, 1070px) { &:nth-child(n + 5) { display: none; } }
-      @include range-width(1070px, 1190px) { &:nth-child(n + 6) { display: none; } }
-      @include range-width(1190px) { &:nth-child(n + 7) { display: none; } }
+    @include range-width(0, 600px){
+      height: 24px;
+      line-height: 24px;
     }
   }
-}
-
-.album_title, .video_title {
-  display: inline-block;
-  width: 100%;
-  color: rgba(113, 113, 113, 1.00);
-  font-size: 14px;
-  padding: 10px 0;
-  text-align: left;
-}
-.video {
-  display: inline-block;
-  width: 100%;
-  height: auto !important;
-  overflow: hidden;
-  @include border-radius(2px);
-  @include box-shadow(0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24));
-
-  + .video, + .video_title, + .album_title, + .article_title {
-    margin-top: 30px;
+  section {
+    font-size: 14px;
+    height: 21px * 2;
+    line-height: 21px;
+    margin-top: 16px;
+    color: rgba(90, 90, 90, 1.00);
+    overflow: hidden;
+    @include range-width(0, 600px){
+      width: 100%;
+      padding-left: 0;
+      margin-top: 8px;
+    }
+    @include range-width(0, 400px){
+      padding: 0 16px;
+      margin-top: 0;
+    }
   }
-}
-
-.album {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  height: 200px;
-  overflow: hidden;
-  @include border-radius(2px);
-  @include clearfix();
-  @include box-shadow(0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24));
-  
-  > span {
+  time {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 16px;
+    right: 16px;
+    padding-top: 4px;
     display: inline-block;
-    width: 100%;
-    padding: 5px;
-    height: 50%;
-    @include overflow-docx3();
-    color: rgba(255, 255, 255, .85);
-    // background-color: rgba(39, 40, 34, 1);
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==);
-    background-repeat: repeat-x;
-    z-index: 2;
-    text-align: left;
-
-    a {
-      text-decoration: none;
-      color: rgba(255, 255, 255, .85);
-    }
-  }
-  &:hover {
-    > span {
-    }
-  }
-  > a {
-    position: absolute;
-    top: 65px;
-    display: inline-block;
-    width: 35px;
-    height: 70px;
-    line-height: 70px;
-    background-color: rgba(240, 240, 240, .7);
-    z-index: 3;
-    font-size: 20px;
-    cursor: pointer;
-    @include transition(background-color .3s);
-    
-    
-    &:hover {
-      background-color: rgba(240, 240, 240, .9);
-    }
-    &:not(:last-child) {
-      left: -1px;
-      @include border-right-radius(5px);
-    }
-    &:last-child {
-      right: -1px;
-      @include border-left-radius(5px);
-    }
-  }
-  > div {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    @include transition(opacity 1s);
-    z-index: 1;
-  }
-  @for $i from 1 through 10 {
-    &[data-n='#{$i - 1}'] {
-      > div {
-        @for $j from 1 through 10 {
-          &:nth-child(#{$j}) {
-            @if($j == $i) {
-              @include opacity(1);
-              z-index: 2;
-            } @else {
-              @include opacity(0);
-              z-index: 1;
-            }
-          }
-        } 
-      }
+    width: 85px;
+    text-align: right;
+    font-size: 13px;
+    color: rgba(130, 130, 130, 1.00);
+    @include range-width(0, 400px){
+      display: none;
     }
   }
 }
