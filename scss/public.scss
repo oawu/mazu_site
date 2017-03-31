@@ -748,6 +748,9 @@ section.section {
       }
       @include range-width(500px){
         width: calc(50% - 16px / 2);
+        &:first-child:last-child {
+          width: 100%;
+        }
       }
       ul, ol {
         padding-left: 24px + 8px;
