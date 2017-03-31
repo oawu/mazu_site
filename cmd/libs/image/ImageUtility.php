@@ -85,7 +85,7 @@ class ImageUtility {
   }
 
   // return boolean
-  public static function make_block9 ($files, $save, $class = 'ImageGdUtility') {
+  public static function make_block9 ($files, $save, $class = 'ImageImagickUtility') {
     if (!(count ($files) >= 9))
       throw new ImageUtilityException ('ImageUtility 錯誤！', '參數錯誤，files count：' . count ($files), '參數 files 數量一定要大於 9！');
 
@@ -94,7 +94,7 @@ class ImageUtility {
 
     return call_user_func_array (array ($class, 'make_block9'), array ($files, $save));
   }
-  public static function photos ($files, $save, $class = 'ImageGdUtility') {
+  public static function photos ($files, $save, $class = 'ImageImagickUtility') {
     if (!class_exists ($class))
       include_once $class . '.php';
 
