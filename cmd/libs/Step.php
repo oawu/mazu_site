@@ -1437,11 +1437,11 @@ class Step {
 
     if (!Step::writeFile (PATH . 'gps' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
           'meta' => meta (
-              array ('name' => 'keywords', 'content' => KEYWORDS),
-              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')),
+              array ('name' => 'keywords', 'content' => KEYWORDS . ',GoogleMaps'),
+              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($des = '2017北港迎媽祖，農曆三月十九日(4/15、16)遶境路關出來囉，大家快點分享吧！使用 Google Maps 做導覽，讓大家更方便喔！同時活動期間將會啟動 GPS 讓大家知道目前遶境到哪囉！如候鳥歸巢般的時刻，各位在外地的北港囝仔你準備好了嗎？一年一度的北港三月十九要開始囉！'), 0, 150, '…','UTF-8')),
               array ('property' => 'og:url', 'content' => PAGE_URL_GPS),
-              array ('property' => 'og:title', 'content' => '遶境路關' . ' - ' . TITLE),
-              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION, false), 0, 300, '…','UTF-8')),
+              array ('property' => 'og:title', 'content' => '三月十九 遶境路關 路線圖' . ' - ' . TITLE),
+              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($des, false), 0, 300, '…','UTF-8')),
               array ('property' => 'article:author', 'content' => OA_FB_URL),
               array ('property' => 'article:modified_time', 'content' => date ('c')),
               array ('property' => 'article:published_time', 'content' => date ('c')),
@@ -1471,7 +1471,7 @@ class Step {
                   '@type' => 'Organization', 'name' => TITLE,
                   'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
                 ),
-              'description' => mb_strimwidth (remove_ckedit_tag (DESCRIPTION), 0, 150, '…','UTF-8')
+              'description' => mb_strimwidth (remove_ckedit_tag ($des), 0, 150, '…','UTF-8')
             ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
