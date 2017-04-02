@@ -1190,7 +1190,7 @@ section.section {
   > * {
     float: left;
   }
-  header {
+  >header {
     display: inline-block;
     width: 100%;
     text-align: left;
@@ -1303,14 +1303,16 @@ section.section {
       }
     }
   }
-  div {
+  > div {
     position: relative;
     display: inline-block;
     width: 100%;
+  }
+  >div:not(.fb-comments) {
     height: 20px;
     line-height: 20px;
-    @include clearfix();
     padding-left: 20px;
+    @include clearfix();
     &:hover {
       &:before {
         @include opacity(1);
