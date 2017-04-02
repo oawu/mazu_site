@@ -8,6 +8,7 @@ cmd/npm-debug.log
 cmd/config_upload.php
 cmd/config_build.php
 cmd/verify.php
+cmd/put.php
 
 /sitemap/*
 
