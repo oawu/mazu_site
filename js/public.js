@@ -122,7 +122,7 @@ $(function () {
     url = $section.attr ('data-url'),
     $parent = $(this).parent (),
     text = $parent.text ();
-    $('<figure />').data ('pvid', $(this).data ('pvid')).append ($('<img />').attr ('src', src)).append (text.length ? $('<figcaption />').text (text) : null).insertAfter ($parent);
+    $('<figure />').attr ('data-pvid', $(this).data ('pvid')).append ($('<img />').attr ('src', src)).append (text.length ? $('<figcaption />').text (text) : null).insertAfter ($parent);
     return $(this);
   }).each (function (i) { $(this).parent ().remove (); });
 
