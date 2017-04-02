@@ -15,7 +15,7 @@
   </select>
   <label for='select' class='icon-keyboard_arrow_down'></label>
 </div>
-
+<div id='paths'></div>
 <label class='icon-binoculars' id='fzd'><span>移動方向</span><label class='sw'><input type='checkbox' id='fz' checked><span></span></label></label>
 <div id='f' class='fb-like' data-href='<?php echo PAGE_URL_GPS;?>' data-send='false' data-layout='button_count' data-action='like' data-show-faces='false' data-share='true'></div>
 <div id='z'><a class='icon-zi'></a><a class='icon-zo'></a></div>
