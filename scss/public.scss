@@ -1201,6 +1201,7 @@ section.section {
     overflow: hidden;
     text-align: left;
     cursor: pointer;
+    text-decoration: none;
     color: rgba(67, 67, 67, 1.00);
     @include border-radius(2px);
     @include transition(box-shadow .3s);

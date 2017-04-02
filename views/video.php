@@ -34,5 +34,11 @@
     </div>
 <?php
   } ?>
+  
+  <div class='other'>
+    <header>留言討論區</header>
+    <div class="fb-comments" data-order-by='reverse_time' width='100%' data-href="<?php echo $video['url'];?>" data-numposts="5"></div>
+  </div>
+
   <a class='icon-mail-forward share'></a>
 </article>
