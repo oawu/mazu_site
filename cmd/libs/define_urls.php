@@ -32,3 +32,4 @@ define ('URL_IMG_OG', URL_IMG . 'og/');
 
 define ('URL_IMG_OG_TMP', URL_IMG_OG . 'tmp/');
 define ('URL_D4_OG_IMG', URL_IMG_OG . 'd4.jpg');
+define ('URL_D4_OG_IMG_GPS', URL_IMG_OG . 'gps2.png');

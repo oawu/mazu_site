@@ -1445,7 +1445,7 @@ class Step {
               array ('property' => 'article:author', 'content' => OA_FB_URL),
               array ('property' => 'article:modified_time', 'content' => date ('c')),
               array ('property' => 'article:published_time', 'content' => date ('c')),
-              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG, 'alt' => TITLE),
+              array ('property' => 'og:image', 'content' => $ogImgUrl = URL_D4_OG_IMG_GPS, 'alt' => TITLE),
               array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
               array ('property' => 'og:image:width', 'content' => 1200),
               array ('property' => 'og:image:height', 'content' => 630)
