@@ -5,15 +5,40 @@
 
 window.gmc = function () { $(window).trigger ('gm'); };
 var OAML = function () { };
+
+var _tl = 10 * 60 * 1000,
+    _tlh = 20 * 1000,
+    _tlhf = null,
+    _ks = [],
+    _vpt = null,
+    _t = 1000 * 60,
+    _vml = false,
+    _lat = 23.569,
+    _lng = 120.3038,
+    _vm = null,
+    _vp = null,
+    _vz = null,
+    _va = null,
+    _tr = null,
+    _im = false,
+    _vy = null,
+    _vs = null,
+    _v = null,
+    _n = 0,
+    _vzs = [],
+    _tp = 67 * 1000, // points time reload
+    _tr2 = 35 * 60 * 1000, // time reload
+    _isl = false;
+
+_tlhf = setTimeout (function () { window.location.replace ('https://mazu.ioa.tw/gps.html' + '?f=er'); }, _tlh);
+
 $(function () {
-  var _ks = [], _vpt = null, _t = 1000 * 60, _vml = false, _lat = 23.569, _lng = 120.3038, _vm = null, _vp = null, _vz = null, _va = null, _tr = null, _im = false, _vy = null, _vs = null;
+
   var $maps = $('#maps');
-  var $fz = $('#fz');
   var $p = $('#paths');
-  var $fzl = $fz.parent ();
   var $select = $('#select').change (fsp);
   var $o = $('#o');
-  var _tl = 10 * 60 * 1000; // location point cache
+
   var pss = {
     '1': {n: '陣頭 三月十九 下午路線', p: [['出廟'], ['中山路', [[23.56763,120.30461],[23.56620,120.30434],[23.56527,120.30416],[23.56454,120.30403]], '宮口街'], ['民生路', [[23.56454,120.30402],[23.56437,120.30492]]], ['益安路', [[23.56439,120.30493],[23.56514,120.30505]]], ['信義路', [[23.56514,120.30505],[23.56521,120.30456]]], ['捷發街', [[23.56523,120.30456],[23.56613,120.30473]], '捷發內'], ['光明路', [[23.56613,120.30472],[23.56605,120.30524]]], ['益安路', [[23.56605,120.30524],[23.56552,120.30517]]], ['東興街', [[23.56552,120.30514],[23.56542,120.30561],[23.56527,120.30652]], '水廠後'], ['中秋路', [[23.56528,120.30651],[23.56621,120.30662]], '車仔寮'], ['東勢街', [[23.56621,120.30660],[23.56613,120.30629],[23.56605,120.30599],[23.56599,120.30588],[23.56599,120.30582]]], ['東華巷', [[23.56599,120.30582],[23.56612,120.30587],[23.56637,120.30590],[23.56652,120.30589],[23.56661,120.30585],[23.56662,120.30574]]], ['彌陀寺前', [[23.56663,120.30574],[23.56676,120.30573],[23.56695,120.30578],[23.56716,120.30586],[23.56728,120.30550]]], ['中央市場後', [[23.56728,120.30548],[23.56765,120.30554]], '豬砧後'], ['厚生路', [[23.56763,120.30557],[23.56773,120.30492]]], ['媽祖廟後', [[23.56774,120.30492],[23.56822,120.30500],[23.56834,120.30498],[23.56842,120.30489],[23.56845,120.30481]]], ['國宮旅社前', [[23.56844,120.30480],[23.56874,120.30498],[23.56891,120.30510]]], ['仁和路', [[23.56890,120.30512],[23.56958,120.30557],[23.56998,120.30587],[23.57001,120.30588],[23.57025,120.30586]], '蜊仔街'], ['三連街', [[23.57024,120.30586],[23.57041,120.30547],[23.57057,120.30521],[23.57062,120.30504]]], ['公館街', [[23.57063,120.30504],[23.57054,120.30501],[23.57045,120.30496],[23.57030,120.30493]]], ['大同路', [[23.57030,120.30493],[23.57047,120.30451]]], ['博愛路大復戲院前', [[23.57046,120.30451],[23.56954,120.30411]], '舊戲園'], ['賜福街', [[23.56957,120.30406],[23.56975,120.30403],[23.57037,120.30388],[23.57076,120.30373],[23.57079,120.30366]], '大復戲院(舊戲園)後'], ['義民路', [[23.57084,120.30359],[23.57181,120.30402]], '原北港戲院(新戲園)前'], ['復興街', [[23.57181,120.30402],[23.57214,120.30303]]], ['文化路', [[23.57218,120.30301],[23.57268,120.30321],[23.57313,120.30343],[23.57413,120.30396]], '王應東橋公園口'], ['民有路', [[23.57414,120.30395],[23.57377,120.30280]], '舊鎮托兒所前'], ['公園路', [[23.57377,120.30280],[23.57302,120.30308]]], ['民族路', [[23.57301,120.30309],[23.57274,120.30212],[23.57236,120.30087]], '南風汽水場前'], ['文昌路', [[23.57236,120.30086],[23.57309,120.30059]], '原國宮戲院前'], ['民有路', [[23.57310,120.30060],[23.57287,120.29985]]], ['華勝路', [[23.57288,120.29986],[23.57363,120.29960]]], ['民治路', [[23.57364,120.29960],[23.57386,120.30033]]], ['文昌路', [[23.57385,120.30033],[23.57311,120.30060]]], ['民有路', [[23.57310,120.30059],[23.57337,120.30151]], '都城隍廟'], ['華興街', [[23.57338,120.30151],[23.57413,120.30124]], '聖安宮側'], ['民治路', [[23.57414,120.30124],[23.57425,120.30162]]], ['吉祥路', [[23.57424,120.30163],[23.57348,120.30185]], '清潔隊前'], ['民有路', [[23.57347,120.30184],[23.57378,120.30280]], '天主教堂前'], ['公園路', [[23.57378,120.30279],[23.57453,120.30254],[23.57531,120.30221],[23.57624,120.30187],[23.57685,120.30166],[23.57719,120.30153]], '原農田水利會前'], ['文星路', [[23.57719,120.30152],[23.57692,120.30061]]], ['吉祥路', [[23.57691,120.30061],[23.57650,120.30076],[23.57597,120.30100],[23.57500,120.30131]]], ['民享路', [[23.57501,120.30131],[23.57464,120.30004]]], ['文昌路', [[23.57464,120.30004],[23.57559,120.29971],[23.57653,120.29938],[23.57730,120.29910]]], ['文明路右轉', [[23.57729,120.29909],[23.57769,120.30034]]], ['吉祥路左轉', [[23.57769,120.30034],[23.57790,120.30031],[23.57842,120.30011]]], ['文仁路左轉', [[23.57842,120.30011],[23.57805,120.29886]]], ['文昌路', [[23.57804,120.29885],[23.57729,120.29909]]], ['文明路', [[23.57730,120.29909],[23.57705,120.29823],[23.57684,120.29758],[23.57660,120.29684],[23.57646,120.29653]]], ['文明路155巷', [[23.57647,120.29653],[23.57624,120.29668],[23.57623,120.29678],[23.57651,120.29771]]], ['仁愛路', [[23.57651,120.29771],[23.57607,120.29787],[23.57572,120.29799],[23.57511,120.29819],[23.57504,120.29822],[23.57418,120.29855]]], ['民享路', [[23.57418,120.29855],[23.57441,120.29932],[23.57463,120.30005]]], ['文昌路', [[23.57462,120.30004],[23.57386,120.30032]], '水利局前'], ['民治路', [[23.57386,120.30032],[23.57364,120.29959]]], ['華勝路', [[23.57363,120.29959],[23.57308,120.29977]]], ['勝利街', [[23.57308,120.29978],[23.57300,120.29931],[23.57296,120.29891],[23.57259,120.29878]]], ['大同路', [[23.57258,120.29878],[23.57228,120.29965],[23.57219,120.30009],[23.57196,120.30080],[23.57174,120.30144],[23.57123,120.30256]], '北埔路頭'], ['文化路', [[23.57123,120.30257],[23.57055,120.30223]]], ['公民路', [[23.57055,120.30223],[23.57003,120.30320]], '陳聖王廟前'], ['義民路', [[23.57003,120.30319],[23.56928,120.30282]]], ['中正路', [[23.56925,120.30282],[23.56885,120.30386]], '石頭路'], ['電信局前', [[23.56885,120.30387],[23.56847,120.30456]]], ['媽祖廟西邊', [[23.56846,120.30456],[23.56835,120.30447],[23.56797,120.30435]]], ['民主路', [[23.56797,120.30435],[23.56812,120.30360],[23.56838,120.30243]], '橫街'], ['土銀前', [[23.56839,120.30243],[23.56867,120.30153]]], ['郵局前', [[23.56866,120.30154],[23.56875,120.30148],[23.56883,120.30142],[23.56928,120.30167],[23.56965,120.30180]], '圓環'], ['中正路左轉', [[23.56964,120.30179],[23.57021,120.30036]]], ['民權路', [[23.57019,120.30035],[23.56913,120.29967]]], ['民主路左轉', [[23.56912,120.29969],[23.56876,120.30116]]], ['文化路右轉', [[23.56874,120.30118],[23.56860,120.30117],[23.56851,120.30128],[23.56765,120.30119]]], ['文化路27巷', [[23.56768,120.30119],[23.56756,120.30071],[23.56739,120.30075],[23.56724,120.30092]]], ['右轉西勢街慈德寺前', [[23.56723,120.30093],[23.56704,120.30038],[23.56703,120.30001],[23.56687,120.29998]]], ['光明路', [[23.56686,120.29998],[23.56656,120.30203]]], ['義民路', [[23.56656,120.30205],[23.56572,120.30186],[23.56554,120.30284]]], ['信義路', [[23.56554,120.30283],[23.56599,120.30299],[23.56600,120.30309],[23.56594,120.30324]], '52巷'], ['博愛路', [[23.56594,120.30322],[23.56549,120.30307]], '溝仔墘'], ['信義路', [[23.56548,120.30305],[23.56527,120.30419]]], ['中山路', [[23.56528,120.30415],[23.56619,120.30434]]], ['光明路', [[23.56619,120.30434],[23.56636,120.30326]]], ['博愛路', [[23.56637,120.30325],[23.56736,120.30344]], '舊蕃簽市'], ['中華路', [[23.56734,120.30344],[23.56729,120.30371],[23.56717,120.30450]]], ['中山路', [[23.56713,120.30448],[23.56761,120.30460]]], ['入廟']]},
     '2': {n: '陣頭 三月十九 晚間路線', p: [['出廟'], ['中山路', [[23.56762,120.30462],[23.56714,120.30450],[23.56619,120.30434],[23.56527,120.30416],[23.56454,120.30401]], '宮口街'], ['民生路', [[23.56456,120.30402],[23.56482,120.30274]], '溪墘尾'], ['博愛路', [[23.56482,120.30275],[23.56506,120.30282],[23.56526,120.30293],[23.56549,120.30299],[23.56552,120.30310],[23.56637,120.30335]], '溝仔墘'], ['光明路', [[23.56636,120.30333],[23.56657,120.30199]], '麥仔程'], ['南陽國小前', [[23.56655,120.30199],[23.56669,120.30105]]], ['文化路', [[23.56669,120.30105],[23.56725,120.30115]]], ['西勢街', [[23.56724,120.30114],[23.56724,120.30142],[23.56743,120.30166],[23.56752,120.30224]]], ['旌義街', [[23.56751,120.30225],[23.56760,120.30251],[23.56763,120.30279],[23.56763,120.30299]]], ['義民廟前', [[23.56764,120.30300],[23.56768,120.30301]]], ['民榮街', [[23.56765,120.30300],[23.56822,120.30311]], '打鐵街'], ['褒新街', [[23.56826,120.30312],[23.56861,120.30336],[23.56876,120.30336],[23.56898,120.30272]], '埔仔新街'], ['福泰大飯店', [[23.56898,120.30272],[23.56926,120.30285]]], ['中正路', [[23.56927,120.30284],[23.56966,120.30180]]], ['花旗銀行前', [[23.56964,120.30181],[23.56935,120.30170]]], ['郵局前', [[23.56931,120.30168],[23.56881,120.30144],[23.56884,120.30126],[23.56871,120.30116]], '圓環'], ['民眾服務站前', [[23.56874,120.30116],[23.56893,120.30039],[23.56914,120.29969]]], ['民權路', [[23.56914,120.29970],[23.56977,120.30008],[23.57020,120.30038]]], ['中正路', [[23.57021,120.30037],[23.57001,120.30094]]], ['新民路', [[23.57001,120.30094],[23.57050,120.30113],[23.57155,120.30181]]], ['大同路', [[23.57156,120.30181],[23.57121,120.30256],[23.57083,120.30357]]], ['義民路', [[23.57082,120.30357],[23.57004,120.30322]]], ['公民路', [[23.57004,120.30321],[23.56953,120.30413]]], ['博愛路', [[23.56954,120.30412],[23.56932,120.30409],[23.56883,120.30384],[23.56812,120.30360]], '溪仔底'], ['民主路', [[23.56812,120.30359],[23.56798,120.30439]], '橫街仔'], ['媽祖廟西邊', [[23.56798,120.30436],[23.56824,120.30443],[23.56840,120.30450],[23.56847,120.30461],[23.56845,120.30483]]], ['仁和路', [[23.56844,120.30481],[23.56890,120.30511]]], ['公民路', [[23.56890,120.30512],[23.56937,120.30438]], '國宮旅行社邊'], ['仁德街', [[23.56938,120.30437],[23.56966,120.30462],[23.56995,120.30479],[23.57030,120.30493]]], ['大同路', [[23.57031,120.30493],[23.56996,120.30588]], '牛車路'], ['益安路', [[23.56998,120.30588],[23.56871,120.30621],[23.56856,120.30622],[23.56833,120.30600],[23.56763,120.30554],[23.56731,120.30553]]], ['彌陀寺前', [[23.56730,120.30553],[23.56709,120.30609]]], ['中秋路', [[23.56707,120.30613],[23.56654,120.30662],[23.56643,120.30663],[23.56581,120.30657]], '車仔寮'], ['東榮街', [[23.56582,120.30655],[23.56588,120.30599],[23.56601,120.30593],[23.56601,120.30547]]], ['東陽巷', [[23.56600,120.30546],[23.56573,120.30540],[23.56548,120.30535],[23.56542,120.30560]]], ['水源街', [[23.56545,120.30563],[23.56483,120.30551],[23.56428,120.30539]], '水道頭'], ['民生路', [[23.56427,120.30539],[23.56436,120.30491],[23.56454,120.30403]]], ['中正路', [[23.56454,120.30403],[23.56527,120.30416],[23.56620,120.30434],[23.56716,120.30451],[23.56763,120.30464]]], ['入廟']]},
@@ -30,6 +55,8 @@ $(function () {
   };
 
   var _ps = {}, _p = [], _vi = [], _vis = [];
+  
+  function f22 (l, c) { var arr = []; for (var i = 0; i < l.length; i++) if (typeof arr[parseInt (i / c, 10)] == 'undefined') arr[parseInt (i / c, 10)] = [l[i]]; else arr[parseInt (i / c, 10)][i % c] = l[i]; return arr; }
   function fap (w, h, q) { return 'M -' + (w / 2) + ' ' + (h / 2) + 'l ' + (w / 2) + ' -' + h + ' l ' + (w / 2) + ' ' + h + ' q -' + (w / 2) + ' -' + q + ' -' + w + ' 0'; }
   
   function fmkm (m, a, n, cn, u, i, c) {
@@ -56,10 +83,7 @@ $(function () {
 
     navigator.geolocation.getCurrentPosition (function (position) {
       if (isFirst === true) {
-        $o.addClass ('s').click (function () {
-          _flo (false);
-          if ($fz.prop ('checked')) $fz.prop ('checked', false);
-        });
+        $o.addClass ('s').click (_flo);
       } else {
         var t = new google.maps.LatLng (position.coords.latitude, position.coords.longitude);
         _vy.setOptions ({ map: _vm, zIndex: _va.zIndex + 1, position: t });
@@ -80,26 +104,12 @@ $(function () {
         data: _vl
       }).complete (function () { $o.removeClass ('l'); });
 
-    }, 
-    function (e) {
-      $o.removeClass ('l');
-      // $.ajax ({
-      //   url: 'http://ip-api.com/json',
-      //   dataType: 'jsonp',
-      //   crossDomain: true,
-      //   async: true, cache: false, type: 'get',
-      // }).done (function (result) {
-      //   
-      // })
-      // .fail (function (result) { })
-      // .complete (function (result) { });
-
-    }, { enableHighAccuracy: true });
+    }, function (e) { $o.removeClass ('l'); }, { enableHighAccuracy: true });
   }
 
   function flp (i){
     i = (i !== undefined) && ((i + 1) < _p.length) ? i + 1 : 0;
-    clearTimeout (_tr); _tr = setTimeout (function () { if (!_im && !(i % 10) && $fz.prop ('checked')) fmg (_vm, _p[i]);
+    clearTimeout (_tr); _tr = setTimeout (function () {
       fmkg (_va, _p[i], flp (i), i);
     }, 150);
   }
@@ -111,30 +121,16 @@ $(function () {
     _p = _ps[$select.val ()].map (function (t) { return new google.maps.LatLng (t[0] / Math.pow (10, 6) + 23, t[1] / Math.pow (10, 6) + 120); });
     var _i = [].concat (_vi[$select.val ()].map (function (t) { return [t[0], new google.maps.LatLng (t[1][0] / Math.pow (10, 6) + 23, t[1][1] / Math.pow (10, 6) + 120)]; }));
     // var _i = [['起馬', _p[0]], ['下馬', _p[_p.length - 1]]].concat (_vi[$select.val ()].map (function (t) { return [t[0], new google.maps.LatLng (t[1][0] / Math.pow (10, 6) + 23, t[1][1] / Math.pow (10, 6) + 120)]; }));
+
     $p.empty ().append (
       $('<h3 />').text (pss[$select.val ()].n)).append (
-      $('<ul />').append (
-        pss[$select.val ()].p.map (function (t) {
-          var $li = $('<li />');
-          if (typeof t[2] !== 'undefined') $li.attr ('title', t[2]);
-          if (typeof t[1] !== 'undefined') $li.attr ('data-paths', JSON.stringify (t[1])).click (function () {
-              if (!$p.is (':visible')) return;
-              $(this).addClass ('active').siblings ().removeClass ('active');
-              var bs = new google.maps.LatLngBounds ();
-              _vpt.setPath ($(this).data ('paths').map (function (t) { t = new google.maps.LatLng (t[0], t[1]); bs.extend (t); return t; }));
-              _vm.fitBounds (bs);
-
-              if (_vm.zoom > 18) _vm.setZoom (18);
-            });
-          return $li.text (t[0]);
-        })));
+      $('<ul />').append (pss[$select.val ()].p.map (function (t) { var $li = $('<li />'); if (typeof t[2] !== 'undefined') $li.attr ('title', t[2]); if (typeof t[1] !== 'undefined') $li.attr ('data-paths', JSON.stringify (t[1])).click (function () { if (!$p.is (':visible')) return; $(this).addClass ('active').siblings ().removeClass ('active'); var bs = new google.maps.LatLngBounds (); _vpt.setPath ($(this).data ('paths').map (function (t) { t = new google.maps.LatLng (t[0], t[1]); bs.extend (t); return t; })); _vm.fitBounds (bs); if (_vm.zoom > 18) _vm.setZoom (18); }); return $li.text (t[0]); })));
 
     
     clearTimeout (_tr);
     clearTimeout (window._fmkmTimer);
     _vp.setPath (_p);
     _va.setPosition (_p[0]);
-    // if (_vz) _vz.setPosition (_p[0]);
     setTimeout (flp, 1000);
     _vp.setOptions ({ icons: _vs.map (function (t) { return {icon: t, offset: '0%'};}) });
 
@@ -155,6 +151,86 @@ $(function () {
     if (v == 1) if ((t = $p.find ('.active').nextAll ('li[data-paths]')).length) return t.eq (0).click (); else return $p.find ('li[data-paths]').first ().click ();
     else if ((t = $p.find ('.active').prevAll ('li[data-paths]')).length) return t.eq (0).click (); else return $p.find ('li[data-paths]').last ().click ();
   }
+
+  function fmgc (c1, c2, p) {
+    var nc = {};
+    function mc (a, b) { return a + Math.round ((b - a) * p); }
+
+    function mcp (num) {
+      var str = Math.max (Math.min (num, 255), 0).toString (16);
+      if (str.length < 2) str = '0' + str;
+      return str;
+    }
+
+    nc.r = mc (c1.r, c2.r);
+    nc.g = mc (c1.g, c2.g);
+    nc.b = mc (c1.b, c2.b);
+    return "#" + mcp(nc.r) + mcp(nc.g) + mcp(nc.b);
+    // return nc;
+  }
+  function _fapi (isFirst){
+    if (_isl) return;
+    _isl = true;
+
+    $.ajax ({
+      url: 'https://pic.mazu.ioa.tw/api/dev/p.json',
+      async: true, cache: false, dataType: 'json', type: 'get',
+      data: {}
+    }).done (function (a) {
+      if (_v === null) _v = a[0];
+      if (a[0] != _v) location.reload (true);
+
+      var v = a.shift ();
+      _n = a.shift ();
+
+      var zi = 99999999;
+
+      _vzs = _vzs.map (function (t) { t._ps.forEach (function (u) { u.setMap (null); }); t.setMap (null); return t; }).filter (function () { return false; });
+      _vzs = a.map (function (t, i) {
+        var p = f22 (t[2], 3).map (function (u) {
+          return new google.maps.LatLng (u[0] / Math.pow (10, 6) + 23, u[1] / Math.pow (10, 6) + 120);
+        });
+
+        if (!p.length) p = [new google.maps.LatLng (23.567762179007968, 120.30463546514511)];
+
+        var m = new OAML ({
+          map: _vm, position: p[0], icon: {path: 'M 0 0'}, labelClass: 'mz', labelAnchor: new google.maps.Point (50 / 2, 50), zIndex: zi - i,
+          labelContent: '<div><div><span>' + t[0] + '</span></div><img src="' + t[1] + '"/></div>' });
+
+
+        m._ps = [];
+        p = p.reverse ();
+        for (i = 0; !i || i < p.length - 1; i++) {
+          m._p = new google.maps.Polyline ({
+            map: _vm,
+            strokeColor: fmgc ({r: 255, g: 255, b: 255}, {r: 190, g: 49, b: 68},  (1 / p.length) * i),
+            strokeWeight: (5 / p.length) * i,
+            path: [p[i], p[i + 1]]
+          });
+        }
+
+        return m;
+      }).filter (function (t) {
+        return t !== null;
+      });
+
+      if (isFirst === true) {
+        fsp ();
+        _flo (true);
+
+        if (_vzs.length) {
+          var bs = new google.maps.LatLngBounds ();
+          _vzs.forEach (function (t) { bs.extend (t.position); })
+          _vm.fitBounds (bs);
+        }
+
+        $('#y, #container').addClass ('a');
+        setTimeout (function () { $('#y').remove (); clearTimeout (_tlhf); _tlhf = null; }, 275);
+      }
+    }).complete (function () {
+      _isl = false;
+    });
+  }
   function fin (){
     if (_vml) return ; _vml = true;
     
@@ -167,34 +243,21 @@ $(function () {
     _vm = new google.maps.Map ($maps.get (0), { zoom: 16, disableDefaultUI: true, gestureHandling: 'greedy', center: p });
     _vm.mapTypes.set ('style1', new google.maps.StyledMapType ([{featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: 'on'}]}, {featureType: 'poi', elementType: 'labels.text', stylers: [{visibility: 'off'}]}, {featureType: 'poi.business', stylers: [{visibility: 'on'}]}, {featureType: 'poi.park', elementType: 'labels.text', stylers: [{visibility: 'on'}]}, {featureType: 'road.local', elementType: 'labels', stylers: [{visibility: 'on'}]}]));
     _vm.setMapTypeId ('style1');
+    _vm.addListener ('click', function (e) {
+      
+console.error (e.latLng.lat () + ',' + e.latLng.lng ());
+      
+    })
 
-    _vm.addListener ('zoom_changed', function () {
-      if ($fz.get (0).x) return $fz.get (0).x = false;
-      if ($fz.prop ('checked')) $fz.prop ('checked', false);
-    });
-    _vm.addListener ('dragend', function () {
-      if ($fz.get (0).x) return $fz.get (0).x = false;
-      if ($fz.prop ('checked')) $fz.prop ('checked', false);
-    });
 
     $('#z').find ('a').click (function () { _vm.setZoom (_vm.zoom + ($(this).index () ? -1 : 1)); });
 
-    $fz.click (function () {
-      if ($fzl.hasClass ('l')) return false;
-      $fzl.addClass ('l');
-
-      if ($fz.prop ('checked')) {
-        $fz.get (0).x = true;
-        _vm.setOptions ({ zoom: 16, center: _va.position });
-      }
-      $fzl.removeClass ('l');
-    });
     _vs = [
-        { path: fap (9, 14, 6), strokeColor: 'rgba(50, 60, 140, 1)', strokeWeight: 1, fillColor: 'rgba(68, 77, 145, .85)', fillOpacity: 1 },
-        { path: fap (4.2, 6.9, 2.5), strokeColor: 'rgba(255, 255, 255, 1)', strokeWeight: 1, fillColor: 'rgba(255, 255, 255, 1)', fillOpacity: 1 },
-        { path: fap (4.2, 6.9, 2.5), strokeColor: 'rgba(255, 255, 255, 1)', strokeWeight: 1, fillColor: 'rgba(223, 93, 84, 1)', fillOpacity: 1 }
+        { path: fap (6, 9, 6), strokeColor: 'rgba(50, 60, 140, 1)', strokeWeight: 1, fillColor: 'rgba(68, 77, 145, .85)', fillOpacity: 1 },
+        { path: fap (3, 3.8, 2.5), strokeColor: 'rgba(255, 255, 255, 1)', strokeWeight: 1, fillColor: 'rgba(255, 255, 255, 1)', fillOpacity: 1 },
+        { path: fap (3, 3.8, 2.5), strokeColor: 'rgba(255, 255, 255, 1)', strokeWeight: 1, fillColor: 'rgba(223, 93, 84, 1)', fillOpacity: 1 }
       ];
-    _vz = new OAML ({ map: _vm, position: new google.maps.LatLng (23.56818134920916, 120.3047239780426), icon: {path: 'M 0 0'}, labelAnchor: new google.maps.Point (40 / 2, 70), zIndex: 99999999, labelClass: 'mz', labelContent: '<img src="img/m.png"/>' });
+
     _va = new google.maps.Marker ({
       map: _vm,
       position: p,
@@ -202,35 +265,22 @@ $(function () {
     });
     _vy = new OAML ({ icon: {path: 'M 0 0'}, labelAnchor: new google.maps.Point (50 / 2, 50 / 2), zIndex: 0, labelClass: 'my', labelContent: '<img src="img/user.png"/>'});
     _vp = new google.maps.Polyline ({
-      map: _vm, strokeColor: 'rgba(255, 3, 0, .5)', strokeWeight: 4,
+      map: _vm, strokeColor: 'rgba(250, 131, 131, .7500)', strokeWeight: 3,
       icons: _vs.map (function (t) { return {icon: t, offset: '0%'};})
     });
     
     _vpt = new google.maps.Polyline ({
-      map: _vm, strokeColor: 'rgba(77, 140, 243, .5)', strokeWeight: 12,
+      map: _vm, strokeColor: 'rgba(52, 168, 83, .500)', strokeWeight: 12,
     });
 
     _ps = $maps.data ('paths');
     _vi = $maps.data ('infos');
     
-    fsp ();
-    _flo (true);
+    _fapi (true);
+    setInterval (_fapi, _tp)
+    setInterval (function () { window.location.replace ('https://mazu.ioa.tw' + '?f=rl'); }, _tr2);
 
-
-    // var x = [];
-    // _vm.addListener ('click', function (e) {
-      
-    //   console.error ([e.latLng.lat ().toFixed (5), e.latLng.lng ().toFixed (5)]);
-    //   x.push ([e.latLng.lat ().toFixed (5), e.latLng.lng ().toFixed (5)]);
-    //   $('#paths li.active').attr ('data-paths', JSON.stringify (x));
-    // });
-
-    $(window).keyup (function (e) {
-      if (e.keyCode == 40)
-        fnp (1);
-      if (e.keyCode == 38)
-        fnp (-1);
-    });
+    $(window).keyup (function (e) { if (e.keyCode == 40) fnp (1); if (e.keyCode == 38) fnp (-1); });
   }
   function flgm (){
     var k = _ks[Math.floor ((Math.random() * _ks.length))], s = document.createElement ('script');
