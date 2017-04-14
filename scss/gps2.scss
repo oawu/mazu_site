@@ -1,0 +1,654 @@
+/**
+ * @author      OA Wu <comdan66@gmail.com>
+ * @copyright   Copyright (c) 2016 OA Wu Design
+ */
+
+@import "_oa";
+
+#maps {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 1;
+  a[href^="http://maps.google.com/maps"], a[href^="https://maps.google.com/maps"] {
+    display: none !important;
+  }
+
+  .gmnoprint.gm-bundled-control, .gm-style-cc {
+    display: none;
+  }
+}
+#select {
+  position: relative;
+  z-index: 2;
+  @include input;
+  width: auto;
+  height: 35px;
+  cursor: pointer;
+  padding-right: 35px;
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+  background-color: transparent;
+
+  overflow: hidden;
+  @include border-radius(3px);
+
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  &::-ms-expand {
+    display: none;
+  }
+
+  display: none;
+  &.s {
+    display: inline-block;
+  }
+}
+
+.if {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  font-size: 12px;
+  @include opacity(1);
+
+  &.o {
+    div {
+      bottom: 10px + 70px;
+    }
+  }
+  &:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    content: '';
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(156, 31, 16, 1.00);
+    border: 1px solid rgba(110, 22, 11, 1.00);
+    @include border-radius(50%);
+  }
+  div {
+    position: absolute;
+    bottom: 18px;
+    left: (10px - 110px) / 2;
+    display: inline-block;
+    width: 110px;
+    padding: 5px;
+    background-color: rgba(252, 230, 119, 1.00);
+    line-height: 17px;
+    @include border-radius(2px);
+    @include box-shadow(0 0 1px rgba(156, 31, 16, 1.00));
+
+    b {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      color: white;
+      font-weight: normal;
+      background-color: rgba(195, 58, 47, 1.00);
+      @include border-radius(20px / 2);
+    }
+
+    &:after, &:before {
+      top: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    $w: 5px;
+    &:after {
+      border-color: transparent;
+      border-top-color: rgba(252, 230, 119, 1.00);
+      border-width: $w;
+      margin-left: -$w;
+    }
+    &:before {
+      border-color: transparent;
+      border-top-color: rgba(156, 31, 16, .35);
+      border-width: ($w + 1px);
+      margin-left: -($w + 1px);
+    }
+  }
+}
+#select_panel {
+  position: absolute;
+  top: $siteHeaderHeight + 10px;
+  right: 10px;
+  display: inline-block;
+  z-index: 2;
+  background-color: white;
+  overflow: hidden;
+  @include border-radius(3px);
+
+  > label {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    font-style: normal;
+    font-size: 22px;
+    @include opacity(.75);
+    @include transition(opacity .3s);
+    z-index: 1;
+  }
+  &:hover {
+    > label {
+      &:hover {
+        @include opacity(1);
+      }
+    }
+  }
+}
+
+#z a, #o, #fzd {
+  color: #6f6f6f;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: white;
+  @include transition(color .3s);
+  
+  &:hover {
+    color: #323232;
+  }
+}
+
+#z {
+  position: absolute;
+  bottom: 21px + 10px;
+  @include range-width(0, 370px) {
+    bottom: 10px;
+  }
+  right: 10px;
+  display: inline-block;
+  width: 35px;
+  height: 35px * 2 + 1px;
+  z-index: 20;
+  background-color: white;
+  padding-left: 4px;
+  padding-right: 4px;
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+  @include border-radius(3px);
+  
+  &:after {
+    content: '';
+    position: absolute;
+    top: 35px + 1px;
+    left: 5px;
+    display: inline-block;
+    width: calc(100% - 5px * 2);
+    height: 1px;
+    background-color: #dcdcdc;
+
+  }
+  a {
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+  }
+}
+
+#f {
+  position: fixed;
+  @include range-width(0, 370px) {
+    bottom: 10px;
+  }
+  right: 10px + 35px + 10px;
+  bottom: 21px + 10px;
+  z-index: 20;
+  display: inline-block;
+}
+
+#o {
+  position: absolute;
+  right: 10px;
+  bottom: 21px + 10px + 35px * 2 + 1px + 10px;
+  @include range-width(0, 370px) {
+    bottom: 10px + 35px * 2 + 1px + 10px;
+  }
+  display: none;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 4px;
+  z-index: 20;
+
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+  @include border-radius(3px);
+  
+  &.l {
+    cursor: not-allowed;
+    @include opacity(.4);
+  }
+  &.s {
+    display: inline-block;
+  }
+}
+.mz {
+  position: absolute;
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+
+  &:before, &:after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    display: inline-block;
+    width: 100%;
+    height: 10px;
+    z-index: 1;
+    @include border-radius(50%);
+  }
+  &:before {
+    background-color: rgba(39, 40, 34, .250);
+    @include scale(1);
+    z-index: 2;
+  }
+  &:after {
+    background-color: rgba(156, 31, 16, 1.00);
+    @include animation(m 3s infinite cubic-bezier(0.145, 0.670, 0.170, 0.890));
+  }
+  > div {
+    
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+    display: inline-block;
+    width: 100%;
+
+    text-align: center;
+    
+    > div {
+      position: relative;
+      display: inline-block;
+      margin-left: (50px - 100px) / 2;
+      width: 100px;
+      height: 23px;
+      line-height: 23px;
+      padding: 0 5px;
+      background-color: white;
+      margin-bottom: 5px;
+      @include border-radius(2px);
+      @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+
+      >span {
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        font-size: 13px;
+        @include overflow-docx3();
+      }
+
+      &:after, &:before {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        position: absolute;
+        pointer-events: none;
+      }
+
+      &:after {
+        border-color: transparent;
+        border-top-color: white;
+        border-width: (10px);
+        margin-left: -(10px);
+      }
+      &:before {
+        border-color: transparent;
+        border-top-color: rgba(0, 0, 0, 0.2);
+        border-width: (10px + 1px);
+        margin-left: -(10px + 1px);
+      }
+    }
+    img {
+      display: inline-block;
+      margin: 0 auto;
+      z-index: 3;
+      max-width: 100%;
+    }
+  }
+}
+
+@include keyframes(m){
+  0%{
+    background-color: rgba(156, 31, 16, 1.00);
+    @include scale(1);
+    @include opacity(1);
+  }
+  100% {
+    background-color: rgba(156, 31, 16, .0);
+    @include scale(3);
+    @include opacity(0);
+  }
+}
+
+
+#l {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  height: 21px;
+  line-height: 22px;
+  font-family: Roboto, Arial, sans-serif;
+  z-index: 20;
+  background-color: white;
+  font-size: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  @include box-shadow(0 0 4px rgba(0, 0, 0, 0.15));
+  @include border-top-left-radius(3px);
+  @include opacity(.85);
+  @include clearfix();
+  
+  @include range-width(0, 370px) {
+    display: none;
+  };
+  
+  a {
+    @include a;
+    cursor: pointer;
+  }
+  * {
+    position: relative;
+    float: left;
+    display: inline-block;
+
+    + * {
+      margin-left: 10px;
+
+      &:after {
+        content: '';
+        position: absolute;
+        left: 0 - 10px / 2;
+        top: 5px;
+        width: 1px;
+        height: calc(100% - 5px * 2);
+        background-color: #c8c8c8;
+      }
+    }
+  }
+}
+
+.my {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border: 3px solid white;
+  @include border-radius(50%);
+  @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+  
+  img {
+    width: 100%;
+  }
+}
+
+// #fzd {
+//   position: fixed;
+//   right: 10px + 35px + 10px;
+//   display: inline-block;
+//   // width: 35px;
+//   padding: 0 13px;
+//   font-weight: normal;
+//   height: 35px;
+//   line-height: 35px;
+//   z-index: 20;
+//   cursor: pointer;
+//   color: rgba(50, 50, 50, 0.8);
+//   background-color: white;
+//   @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.3));
+//   @include border-radius(3px);
+//   @include transition(color .3s);
+
+//   bottom: 21px + 10px;
+//   @include range-width(0, 370px) {
+//     bottom: 10px;
+//   }
+//   label {
+//     margin-top: 7px;
+//     margin-left: 3px;
+//   }
+//   span {
+//     margin-left: 5px;
+//   }
+// }
+
+#paths {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  display: inline-block;
+  width: 250px;
+  height: calc(100% - #{$siteHeaderHeight});
+  background-color: white;
+  margin-top: $siteHeaderHeight;
+  text-align: left;
+  @include opacity(1);
+  @include transition(left .3s, opacity .3s);
+  @include box-shadow(0 0 20px rgba(0,0,0,0.3));
+
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(175, 175, 175, 1.00);
+    @include border-radius(4px);  
+  }
+  &::-webkit-scrollbar {
+    background-color: transparent;
+    width: 8px;
+  }
+  @include range-width(0, 630px){
+    display: none;
+  };
+  &:empty {
+    left: -250px;
+    @include opacity(0);
+  }
+  h3 {
+    display: inline-block;
+    width: 100%;
+    @include overflow-docx3();
+    padding: 16px;
+    margin: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, .15);
+  }
+  ul {
+    padding-left: 0;
+    list-style-type: none;
+    margin-top: 0;
+    padding: 10px;
+
+    li {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      padding: 0 8px;
+      height: 30px;
+      line-height: 30px;
+      font-size: 14px;
+
+      padding-right: 30px;
+      cursor: pointer;
+      @include border-radius(2px);
+      @include transition(background-color .3s);
+      @include overflow-docx3();
+
+      &[data-paths] {
+        color: rgba(39, 114, 219, 1.00);
+
+        &:before {
+          content: '\e901';
+          font-family: 'icomoon', "微軟正黑體","Open sans", "Helvetica Neue", "HelveticaNeue", Helvetica, Arial, sans-serif;
+          position: absolute;
+          right: 0;
+          top: 0;
+          display: inline-block;
+          width: 30px;
+          height: 30px;
+          line-height: 30px;
+          color: rgba(41, 128, 185, 1.00);
+          text-align: center;
+          @include opacity(.5);
+          @include transition(opacity .3s);
+        }
+      }
+      &:hover {
+        background-color: rgba(240, 240, 240, 1.00);
+        &:before {
+          @include opacity(1);
+        }
+      }
+      &.active {
+        background-color: rgba(235, 235, 235, 1.00);
+        &:before {
+          @include opacity(1);
+        }
+        // + li {
+        //   background-color: rgba(240, 240, 240, 1.00);
+        // }
+      }
+      + li {
+        @include overflow-docx3();
+        
+        &[title] {
+          &:after {
+            content: '(' attr(title) ')';
+            font-size: 10px;
+            margin-left: 5px;
+            @include opacity(.75);
+          }
+        }
+      }
+    }
+  }
+}
+
+
+
+#container {
+    z-index: 100;
+  &.a {
+    z-index: 20;
+  }
+}
+#y {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  background-color: rgba(156, 31, 16, 1.00);
+  @include opacity(1);
+  @include transition(opacity .3s);
+  
+  &.a {
+    @include opacity(0);
+  }
+
+  > div {
+    position: absolute;
+    top: calc(50% - 350px / 2);
+    height: 350px;
+    left: calc(50% - 500px / 2);
+    width: 500px;
+    display: inline-block;
+    color: rgba(255, 255, 255, 1.00);
+    h1 {
+      @include text-shadow(0 0 3px 1px rgba(110, 22, 11, 1.00));
+      // br {
+      //   display: none;
+      // }
+    }
+    > p {
+      display: block;
+      @include opacity(.85);
+      @include clearfix();
+    }
+    > span {
+      display: block;
+      margin-top: 45px;
+      @include opacity(.55);
+      font-size: 13px;
+    }
+    > div {
+      display: inline-block;
+      margin: 0 auto;
+      margin-top: 35px;
+      @include clearfix();
+      
+      i {
+        float: left;
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        @include border-radius(50%);
+        background-color: rgba(255, 255, 255, 0.6);
+        @include animation(l 1.4s infinite ease-in-out both);
+        margin: 2px;
+        @for $i from 1 through 2 {
+          &:nth-child(#{$i + 1}) {
+            @include animation-delay(0.16s * $i);
+          }
+        }
+      }
+    }
+    @include range-width(0, 850px){
+      width: 100%;
+      left: 0;
+      top: 0;
+      height: 100%;
+      h1 {
+        br {
+          display: block;
+        }
+      }
+      > p {
+        margin-top: 55px;
+      }
+      > span {
+        margin-top: 85px;
+      }
+    }
+  }
+}
+
+
+@include keyframes(l){
+  0%, 80%, 100% {
+    @include scale(0);
+  }
+  40% {
+    @include scale(1);
+  }
+}
