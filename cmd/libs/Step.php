@@ -1541,11 +1541,11 @@ class Step {
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => PAGE_URL_GPS, 'title' => '遶境路關')),
-          'css' => css ('css/public' . CSS, 'css/gps3' . CSS),
-          'js' => js ('js/public' . JS, 'js/gps3' . JS),
+          'css' => css ('css/public' . CSS, 'css/gps2' . CSS),
+          'js' => js ('js/public' . JS, 'js/gps2' . JS),
           'body_class' => 'maps',
           'now' => 'gps',
-          'content' => Step::loadView (PATH_VIEWS . 'gps3' . PHP, array (
+          'content' => Step::loadView (PATH_VIEWS . 'gps2' . PHP, array (
               'h1' => '遶境路關',
               'struct' => Step::$apis['paths']['struct'],
               'paths' => Step::$apis['paths']['paths'],
