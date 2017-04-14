@@ -26,7 +26,7 @@ var _tl = 10 * 60 * 1000,
     _v = null,
     _n = 0,
     _vzs = [],
-    _tp = 67 * 1000, // points time reload
+    _tp = 37 * 1000, // points time reload
     _tr2 = 35 * 60 * 1000, // time reload
     _isl = false;
 
