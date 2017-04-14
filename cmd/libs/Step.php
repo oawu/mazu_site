@@ -1541,8 +1541,8 @@ class Step {
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => PAGE_URL_GPS, 'title' => '遶境路關')),
-          'css' => css ('css/public' . CSS, 'css/gps' . CSS),
-          'js' => js ('js/public' . JS, 'js/gps' . JS),
+          'css' => css ('css/public' . CSS, 'css/gps2' . CSS),
+          'js' => js ('js/public' . JS, 'js/gps2' . JS),
           'body_class' => 'maps',
           'now' => 'gps',
           'content' => Step::loadView (PATH_VIEWS . 'gps2' . PHP, array (
