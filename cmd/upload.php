@@ -30,7 +30,7 @@ Step::cleanBuild ();
 Step::apis ();
 Step::writeIndexHtml ();
 Step::writeArticlesHtml ();
-Step::writeGPSHtml ();
+// Step::writeGPSHtml ();
 Step::writeGPS2Html ();
 Step::writeAuthorHtml ();
 Step::writeLicenseHtml ();

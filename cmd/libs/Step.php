@@ -1500,7 +1500,7 @@ class Step {
   public static function writeGPS2Html () {
     Step::newLine ('-', '更新 GPS2 HTML');
 
-    if (!Step::writeFile (PATH . 'gps3' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+    if (!Step::writeFile (PATH . 'gps' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
           'meta' => meta (
               array ('name' => 'keywords', 'content' => KEYWORDS . ',GoogleMaps'),
               array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($des = '2017北港迎媽祖，農曆三月十九日(4/15、16)開始囉，大家快點分享吧！活動期間會啟動 GPS 讓大家知道目前遶境到哪囉！如候鳥歸巢般的時刻，各位在外地的北港囝仔你準備好了嗎？一年一度的北港三月十九要開始了！外地的朋友快一起跟我們線上迓媽祖！'), 0, 150, '…','UTF-8')),
