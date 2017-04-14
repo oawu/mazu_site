@@ -197,7 +197,7 @@ $(function () {
         for (i = 0; p.length > 2 && (!i || i < p.length - 1); i++) {
           m._ps.push (new google.maps.Polyline ({
             map: _vm,
-            strokeColor: fmgc ({r: 255, g: 255, b: 255}, {r: 41, g: 128, b: 185},  (1 / p.length) * i),
+            strokeColor: fmgc ({r: 255, g: 255, b: 255}, {r: 73, g: 137, b: 242},  (1 / p.length) * i),
             strokeWeight: (5 / p.length) * i,
             path: [p[i], p[i + 1]]
           }));
