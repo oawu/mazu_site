@@ -114,7 +114,9 @@ $(function () {
     }, 150);
   }
 
-  function fsp (){
+  function fsp () {
+    if (!$select.hasClass ('s')) return;
+
     _vis.forEach (function (t) { t.setMap (null); });
     _vpt.setPath ([]);
 
@@ -153,20 +155,11 @@ $(function () {
   }
 
   function fmgc (c1, c2, p) {
-    var nc = {};
     function mc (a, b) { return a + Math.round ((b - a) * p); }
-
-    function mcp (num) {
-      var str = Math.max (Math.min (num, 255), 0).toString (16);
-      if (str.length < 2) str = '0' + str;
-      return str;
-    }
-
-    nc.r = mc (c1.r, c2.r);
-    nc.g = mc (c1.g, c2.g);
-    nc.b = mc (c1.b, c2.b);
-    return "#" + mcp(nc.r) + mcp(nc.g) + mcp(nc.b);
-    // return nc;
+    function mcp (n) { var str = Math.max (Math.min (n, 255), 0).toString (16); if (str.length < 2) str = '0' + str; return str; }
+    var nc = {};
+    nc.r = mc (c1.r, c2.r); nc.g = mc (c1.g, c2.g); nc.b = mc (c1.b, c2.b);
+    return "#" + mcp (nc.r) + mcp (nc.g) + mcp (nc.b);
   }
   function _fapi (isFirst){
     if (_isl) return;
@@ -200,13 +193,14 @@ $(function () {
 
         m._ps = [];
         p = p.reverse ();
-        for (i = 0; !i || i < p.length - 1; i++) {
-          m._p = new google.maps.Polyline ({
+
+        for (i = 0; p.length > 2 && (!i || i < p.length - 1); i++) {
+          m._ps.push (new google.maps.Polyline ({
             map: _vm,
-            strokeColor: fmgc ({r: 255, g: 255, b: 255}, {r: 190, g: 49, b: 68},  (1 / p.length) * i),
+            strokeColor: fmgc ({r: 255, g: 255, b: 255}, {r: 41, g: 128, b: 185},  (1 / p.length) * i),
             strokeWeight: (5 / p.length) * i,
             path: [p[i], p[i + 1]]
-          });
+          }));
         }
 
         return m;
@@ -214,9 +208,12 @@ $(function () {
         return t !== null;
       });
 
+      var $t = $select.removeClass ('s').find ('option[value="' + _n + '"]');
+      if ($t.length) $t.prop ('selected', true) && $select.addClass ('s');
+      fsp ();
+
       if (isFirst === true) {
-        fsp ();
-        _flo (true);
+        _flo (isFirst);
 
         if (_vzs.length) {
           var bs = new google.maps.LatLngBounds ();
@@ -224,6 +221,7 @@ $(function () {
           _vm.fitBounds (bs);
         }
 
+        $(window).keyup (function (e) { if (e.keyCode == 40) fnp (1); if (e.keyCode == 38) fnp (-1); });
         $('#y, #container').addClass ('a');
         setTimeout (function () { $('#y').remove (); clearTimeout (_tlhf); _tlhf = null; }, 275);
       }
@@ -244,9 +242,7 @@ $(function () {
     _vm.mapTypes.set ('style1', new google.maps.StyledMapType ([{featureType: 'administrative.land_parcel', elementType: 'labels', stylers: [{visibility: 'on'}]}, {featureType: 'poi', elementType: 'labels.text', stylers: [{visibility: 'off'}]}, {featureType: 'poi.business', stylers: [{visibility: 'on'}]}, {featureType: 'poi.park', elementType: 'labels.text', stylers: [{visibility: 'on'}]}, {featureType: 'road.local', elementType: 'labels', stylers: [{visibility: 'on'}]}]));
     _vm.setMapTypeId ('style1');
     _vm.addListener ('click', function (e) {
-      
-console.error (e.latLng.lat () + ',' + e.latLng.lng ());
-      
+        console.error (e.latLng.lat () + ',' + e.latLng.lng ());
     })
 
 
@@ -278,9 +274,7 @@ console.error (e.latLng.lat () + ',' + e.latLng.lng ());
     
     _fapi (true);
     setInterval (_fapi, _tp)
-    setInterval (function () { window.location.replace ('https://mazu.ioa.tw' + '?f=rl'); }, _tr2);
-
-    $(window).keyup (function (e) { if (e.keyCode == 40) fnp (1); if (e.keyCode == 38) fnp (-1); });
+    setInterval (function () { window.location.replace ('https://mazu.ioa.tw' + '?f=rl'); }, _tr2);    
   }
   function flgm (){
     var k = _ks[Math.floor ((Math.random() * _ks.length))], s = document.createElement ('script');
