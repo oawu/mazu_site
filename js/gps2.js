@@ -166,7 +166,7 @@ $(function () {
     _isl = true;
 
     $.ajax ({
-      url: 'https://pic.mazu.ioa.tw/api/dev/p.json',
+      url: 'https://pic.mazu.ioa.tw/api/p.json',
       async: true, cache: false, dataType: 'json', type: 'get',
       data: {}
     }).done (function (a) {
