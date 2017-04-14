@@ -1500,7 +1500,7 @@ class Step {
   public static function writeGPS2Html () {
     Step::newLine ('-', '更新 GPS2 HTML');
 
-    if (!Step::writeFile (PATH . 'gps2' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
+    if (!Step::writeFile (PATH . 'gps3' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
           'meta' => meta (
               array ('name' => 'keywords', 'content' => KEYWORDS . ',GoogleMaps'),
               array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($des = '2017北港迎媽祖，農曆三月十九日(4/15、16)遶境路關出來囉，大家快點分享吧！使用 Google Maps 做導覽，讓大家更方便喔！同時活動期間將會啟動 GPS 讓大家知道目前遶境到哪囉！如候鳥歸巢般的時刻，各位在外地的北港囝仔你準備好了嗎？一年一度的北港三月十九要開始囉！'), 0, 150, '…','UTF-8')),
@@ -1541,11 +1541,11 @@ class Step {
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => PAGE_URL_GPS, 'title' => '遶境路關')),
-          'css' => css ('css/public' . CSS, 'css/gps2' . CSS),
-          'js' => js ('js/public' . JS, 'js/gps2' . JS),
+          'css' => css ('css/public' . CSS, 'css/gps3' . CSS),
+          'js' => js ('js/public' . JS, 'js/gps3' . JS),
           'body_class' => 'maps',
           'now' => 'gps',
-          'content' => Step::loadView (PATH_VIEWS . 'gps2' . PHP, array (
+          'content' => Step::loadView (PATH_VIEWS . 'gps3' . PHP, array (
               'h1' => '遶境路關',
               'struct' => Step::$apis['paths']['struct'],
               'paths' => Step::$apis['paths']['paths'],
