@@ -274,7 +274,7 @@ $(function () {
     
     _fapi (true);
     setInterval (_fapi, _tp)
-    setInterval (function () { window.location.replace ('https://mazu.ioa.tw' + '?f=rl'); }, _tr2);    
+    setInterval (function () { window.location.replace ('https://mazu.ioa.tw/gps.html' + '?f=rl'); }, _tr2);    
   }
   function flgm (){
     var k = _ks[Math.floor ((Math.random() * _ks.length))], s = document.createElement ('script');
