@@ -31,7 +31,7 @@ Step::apis ();
 Step::writeIndexHtml ();
 Step::writeArticlesHtml ();
 Step::writeGPSHtml ();
-Step::writeGPS2Html ();
+// Step::writeGPS2Html ();
 Step::writeAuthorHtml ();
 Step::writeLicenseHtml ();
 Step::writeAlbumsHtml ();
