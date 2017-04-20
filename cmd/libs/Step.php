@@ -1009,6 +1009,7 @@ class Step {
           'css' => css ('css/public' . CSS, 'css/article' . CSS),
           'js' => js ('js/public' . JS, 'js/article' . JS),
           'now' => 'articles',
+          'title' => $article['title'],
           'search' => $article['title'],
           'last_url' => URL_ARTICLES . 'index' . HTML,
           'content' => Step::loadView (PATH_VIEWS . 'article' . PHP, array (
@@ -1208,6 +1209,7 @@ class Step {
           'now' => 'albums',
           'body_class' => 'album',
           'last_url' => URL_ALBUMS . 'index' . HTML,
+          'title' => $album['title'],
           'search' => $album['title'],
           'content' => Step::loadView (PATH_VIEWS . 'album' . PHP, array (
               'album' => $album,
@@ -1408,6 +1410,7 @@ class Step {
           'js' => js ('js/public' . JS, 'js/article' . JS),
           'now' => 'videos',
           'last_url' => URL_VIDEOS . 'index' . HTML,
+          'title' => $video['title'],
           'search' => $video['title'],
           'content' => Step::loadView (PATH_VIEWS . 'video' . PHP, array (
               'video' => $video,
