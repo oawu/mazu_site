@@ -725,22 +725,22 @@ class Step {
               array ('rel' => 'canonical', 'href' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML),
               array ('rel' => 'alternate', 'href' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
             ),
-          'jsonLd' => array (
-            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($article) use ($offset, $i) {
-              return array (
-                  "@type" => "ListItem",
-                  "position" => $offset + $i,
-                  "item" => array (
-                      "@id" => $article['url'],
-                      "name" => $article['title'],
-                      "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
-                      "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
-                      "url" => $article['url'],
-                    )
-                  );
-              }, $articles)
-            ),
+          // 'jsonLd' => array (
+          //   '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+          //   "itemListElement" => array_map (function ($article) use ($offset, &$i) {
+          //     return array (
+          //         "@type" => "ListItem",
+          //         "position" => $offset + $i++,
+          //         "item" => array (
+          //             "@id" => $article['url'],
+          //             "name" => $article['title'],
+          //             "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
+          //             "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+          //             "url" => $article['url'],
+          //           )
+          //         );
+          //     }, $articles)
+          //   ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => URL_ARTICLES . (!$offset ? 'index' : $offset) . HTML, 'title' => '所有文章')),
@@ -786,22 +786,22 @@ class Step {
               array ('rel' => 'canonical', 'href' => URL_ARTICLES . 'index' . HTML),
               array ('rel' => 'alternate', 'href' => URL_ARTICLES . 'index' . HTML, 'hreflang' => 'zh-Hant')
             ),
-          'jsonLd' => array (
-            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($article) {
-              return array (
-                  "@type" => "ListItem",
-                  "position" => 0,
-                  "item" => array (
-                      "@id" => $article['url'],
-                      "name" => $article['title'],
-                      "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
-                      "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
-                      "url" => $article['url'],
-                    )
-                  );
-              }, array ())
-            ),
+          // 'jsonLd' => array (
+          //   '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+          //   "itemListElement" => array_map (function ($article) {
+          //     return array (
+          //         "@type" => "ListItem",
+          //         "position" => 0,
+          //         "item" => array (
+          //             "@id" => $article['url'],
+          //             "name" => $article['title'],
+          //             "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
+          //             "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+          //             "url" => $article['url'],
+          //           )
+          //         );
+          //     }, array ())
+          //   ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => URL_ARTICLES . 'index' . HTML, 'title' => '所有文章')),
@@ -834,7 +834,7 @@ class Step {
         for ($offset = 0; $offset < $total; $offset += $limit) {
           $i = 0;
           $articles = array_slice ($tag['articles'], $offset, $limit);
-          $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
+          // $ogimage_path = PATH_IMG_OG_TMP . ($tmpName = uniqid (rand () . '_') . '.jpg');
           // try { ImageUtility::photos (array_values (array_filter (array_map (function ($article) { return download_web_file (str_replace('https', 'http', $article['cover']['c600x315']), PATH_TMP . pathinfo ($article['cover']['c600x315'], PATHINFO_BASENAME)); }, $articles))), $ogimage_path); } catch (Exception $e) { }
 
           if (!Step::writeFile ($tag_path . (!$offset ? 'index' : $offset) . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
@@ -856,22 +856,22 @@ class Step {
                   array ('rel' => 'canonical', 'href' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML),
                   array ('rel' => 'alternate', 'href' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
                 ),
-              'jsonLd' => array (
-                '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-                "itemListElement" => array_map (function ($article) use ($offset, $i) {
-                  return array (
-                      "@type" => "ListItem",
-                      "position" => $offset + $i,
-                      "item" => array (
-                          "@id" => $article['url'],
-                          "name" => $article['title'],
-                          "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
-                          "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
-                          "url" => $article['url'],
-                        )
-                      );
-                  }, $articles)
-                ),
+              // 'jsonLd' => array (
+              //   '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+              //   "itemListElement" => array_map (function ($article) use ($offset, &$i) {
+              //     return array (
+              //         "@type" => "ListItem",
+              //         "position" => $offset + $i++,
+              //         "item" => array (
+              //             "@id" => $article['url'],
+              //             "name" => $article['title'],
+              //             "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
+              //             "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+              //             "url" => $article['url'],
+              //           )
+              //         );
+              //     }, $articles)
+              //   ),
               'scopes' => array (
                 array ('url' => URL, 'title' => TITLE),
                 array ('url' => $tag['url'] . (!$offset ? 'index' : $offset) . HTML, 'title' => $tag['name'])),
@@ -917,22 +917,22 @@ class Step {
                   array ('rel' => 'canonical', 'href' => $tag['url'] . 'index' . HTML),
                   array ('rel' => 'alternate', 'href' => $tag['url'] . 'index' . HTML, 'hreflang' => 'zh-Hant')
                 ),
-              'jsonLd' => array (
-                '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-                "itemListElement" => array_map (function ($article) {
-                  return array (
-                      "@type" => "ListItem",
-                      "position" => 0,
-                      "item" => array (
-                          "@id" => $article['url'],
-                          "name" => $article['title'],
-                          "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
-                          "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
-                          "url" => $article['url'],
-                        )
-                      );
-                  }, array ())
-                ),
+              // 'jsonLd' => array (
+              //   '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+              //   "itemListElement" => array_map (function ($article) {
+              //     return array (
+              //         "@type" => "ListItem",
+              //         "position" => 0,
+              //         "item" => array (
+              //             "@id" => $article['url'],
+              //             "name" => $article['title'],
+              //             "description" => mb_strimwidth (remove_ckedit_tag ($article['content']), 0, 150, '…','UTF-8'),
+              //             "image" => array ('@type' => 'ImageObject', 'url' => $article['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+              //             "url" => $article['url'],
+              //           )
+              //         );
+              //     }, array ())
+              //   ),
               'scopes' => array (
                 array ('url' => URL, 'title' => TITLE),
                 array ('url' => $tag['url'] . 'index' . HTML, 'title' => $tag['name'])),
@@ -1059,22 +1059,22 @@ class Step {
               array ('rel' => 'canonical', 'href' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML),
               array ('rel' => 'alternate', 'href' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
             ),
-          'jsonLd' => array (
-            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($album) use ($offset, $i) {
-              return array (
-                  "@type" => "ListItem",
-                  "position" => $offset + $i,
-                  "item" => array (
-                      "@id" => $album['url'],
-                      "name" => $album['title'],
-                      "description" => mb_strimwidth (remove_ckedit_tag ($album['content']), 0, 150, '…','UTF-8'),
-                      "image" => array ('@type' => 'ImageObject', 'url' => $album['cover']['c600x315'], 'height' => 630, 'width' => 1200),
-                      "url" => $album['url'],
-                    )
-                  );
-              }, $albums)
-            ),
+          // 'jsonLd' => array (
+          //   '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+          //   "itemListElement" => array_map (function ($album) use ($offset, &$i) {
+          //     return array (
+          //         "@type" => "ListItem",
+          //         "position" => $offset + $i++,
+          //         "item" => array (
+          //             "@id" => $album['url'],
+          //             "name" => $album['title'],
+          //             "description" => mb_strimwidth (remove_ckedit_tag ($album['content']), 0, 150, '…','UTF-8'),
+          //             "image" => array ('@type' => 'ImageObject', 'url' => $album['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+          //             "url" => $album['url'],
+          //           )
+          //         );
+          //     }, $albums)
+          //   ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => URL_ALBUMS . (!$offset ? 'index' : $offset) . HTML, 'title' => '活動相簿')),
@@ -1120,22 +1120,22 @@ class Step {
               array ('rel' => 'canonical', 'href' => URL_ALBUMS . 'index' . HTML),
               array ('rel' => 'alternate', 'href' => URL_ALBUMS . 'index' . HTML, 'hreflang' => 'zh-Hant')
             ),
-          'jsonLd' => array (
-            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($album) {
-              return array (
-                  "@type" => "ListItem",
-                  "position" => 0,
-                  "item" => array (
-                      "@id" => $album['url'],
-                      "name" => $album['title'],
-                      "description" => mb_strimwidth (remove_ckedit_tag ($album['content']), 0, 150, '…','UTF-8'),
-                      "image" => array ('@type' => 'ImageObject', 'url' => $album['cover']['c600x315'], 'height' => 630, 'width' => 1200),
-                      "url" => $album['url'],
-                    )
-                  );
-              }, array ())
-            ),
+          // 'jsonLd' => array (
+          //   '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+          //   "itemListElement" => array_map (function ($album) {
+          //     return array (
+          //         "@type" => "ListItem",
+          //         "position" => 0,
+          //         "item" => array (
+          //             "@id" => $album['url'],
+          //             "name" => $album['title'],
+          //             "description" => mb_strimwidth (remove_ckedit_tag ($album['content']), 0, 150, '…','UTF-8'),
+          //             "image" => array ('@type' => 'ImageObject', 'url' => $album['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+          //             "url" => $album['url'],
+          //           )
+          //         );
+          //     }, array ())
+          //   ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => URL_ALBUMS . 'index' . HTML, 'title' => '活動相簿')),
@@ -1257,22 +1257,22 @@ class Step {
               array ('rel' => 'canonical', 'href' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML),
               array ('rel' => 'alternate', 'href' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'hreflang' => 'zh-Hant')
             ),
-          'jsonLd' => array (
-            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($video) use ($offset, $i) {
-              return array (
-                  "@type" => "ListItem",
-                  "position" => $offset + $i,
-                  "item" => array (
-                      "@id" => $video['url'],
-                      "name" => $video['title'],
-                      "description" => mb_strimwidth (remove_ckedit_tag ($video['content']), 0, 150, '…','UTF-8'),
-                      "image" => array ('@type' => 'ImageObject', 'url' => youtube_cover_url ($video['vid']), 'height' => 360, 'width' => 480),
-                      "url" => $video['url'],
-                    )
-                  );
-              }, $videos)
-            ),
+          // 'jsonLd' => array (
+          //   '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+          //   "itemListElement" => array_map (function ($video) use ($offset, &$i) {
+          //     return array (
+          //         "@type" => "ListItem",
+          //         "position" => $offset + $i++,
+          //         "item" => array (
+          //             "@id" => $video['url'],
+          //             "name" => $video['title'],
+          //             "description" => mb_strimwidth (remove_ckedit_tag ($video['content']), 0, 150, '…','UTF-8'),
+          //             "image" => array ('@type' => 'ImageObject', 'url' => youtube_cover_url ($video['vid']), 'height' => 360, 'width' => 480),
+          //             "url" => $video['url'],
+          //           )
+          //         );
+          //     }, $videos)
+          //   ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => URL_VIDEOS . (!$offset ? 'index' : $offset) . HTML, 'title' => '影音紀錄')),
@@ -1318,22 +1318,22 @@ class Step {
               array ('rel' => 'canonical', 'href' => URL_VIDEOS . 'index' . HTML),
               array ('rel' => 'alternate', 'href' => URL_VIDEOS . 'index' . HTML, 'hreflang' => 'zh-Hant')
             ),
-          'jsonLd' => array (
-            '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
-            "itemListElement" => array_map (function ($video) {
-              return array (
-                  "@type" => "ListItem",
-                  "position" => 0,
-                  "item" => array (
-                      "@id" => $video['url'],
-                      "name" => $video['title'],
-                      "description" => mb_strimwidth (remove_ckedit_tag ($video['content']), 0, 150, '…','UTF-8'),
-                      "image" => array ('@type' => 'ImageObject', 'url' => $video['cover']['c600x315'], 'height' => 630, 'width' => 1200),
-                      "url" => $video['url'],
-                    )
-                  );
-              }, array ())
-            ),
+          // 'jsonLd' => array (
+          //   '@context' => 'http://schema.org', '@type' => 'BreadcrumbList',
+          //   "itemListElement" => array_map (function ($video) {
+          //     return array (
+          //         "@type" => "ListItem",
+          //         "position" => 0,
+          //         "item" => array (
+          //             "@id" => $video['url'],
+          //             "name" => $video['title'],
+          //             "description" => mb_strimwidth (remove_ckedit_tag ($video['content']), 0, 150, '…','UTF-8'),
+          //             "image" => array ('@type' => 'ImageObject', 'url' => $video['cover']['c600x315'], 'height' => 630, 'width' => 1200),
+          //             "url" => $video['url'],
+          //           )
+          //         );
+          //     }, array ())
+          //   ),
           'scopes' => array (
             array ('url' => URL, 'title' => TITLE),
             array ('url' => URL_VIDEOS . 'index' . HTML, 'title' => '影音紀錄')),
