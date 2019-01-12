@@ -510,54 +510,7 @@ class Step {
     Step::newLine ('-', '更新 Index HTML');
 
     $obj = Step::$apis['home'];
-    if (!Step::writeFile (PATH . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . '_frame' . PHP, array (
-          'meta' => meta (
-              array ('name' => 'keywords', 'content' => KEYWORDS),
-              array ('name' => 'description', 'content' => mb_strimwidth (remove_ckedit_tag ($obj['content']), 0, 150, '…','UTF-8')),
-              array ('property' => 'og:url', 'content' => $obj['url']),
-              array ('property' => 'og:title', 'content' => $obj['title'] . ' - ' . TITLE),
-              array ('property' => 'og:description', 'content' => mb_strimwidth (remove_ckedit_tag ($obj['content'], false), 0, 300, '…','UTF-8')),
-              array ('property' => 'article:author', 'content' => OA_FB_URL),
-              array ('property' => 'article:modified_time', 'content' => date ('c', strtotime ($obj['updated_at']))),
-              array ('property' => 'article:published_time', 'content' => date ('c', strtotime ($obj['created_at']))),
-              array ('property' => 'og:image', 'content' => $ogImgUrl = $obj['cover']['c1200x630'], 'alt' => TITLE),
-              array ('property' => 'og:image:type', 'content' => typeOfImg ($ogImgUrl), 'tag' => 'larger'),
-              array ('property' => 'og:image:width', 'content' => 1200),
-              array ('property' => 'og:image:height', 'content' => 630)
-            ),
-          'link' => myLink (
-              array ('rel' => 'canonical', 'href' => $obj['url']),
-              array ('rel' => 'alternate', 'href' => $obj['url'], 'hreflang' => 'zh-Hant')
-            ),
-          'jsonLd' => array (
-              '@context' => 'http://schema.org', '@type' => 'Article',
-              'mainEntityOfPage' => array (
-                '@type' => 'WebPage',
-                '@id' => $obj['url']),
-              'headline' => $obj['title'],
-              'image' => array ('@type' => 'ImageObject', 'url' => $ogImgUrl, 'height' => 630, 'width' => 1200),
-              'datePublished' => date ('c', strtotime ($obj['created_at'])),
-              'dateModified' => date ('c', strtotime ($obj['updated_at'])),
-              'author' => array (
-                  '@type' => 'Person', 'name' => $obj['user']['name'], 'url' => facebook_url ($obj['user']['fbid']),
-                  'image' => array ('@type' => 'ImageObject', 'url' => avatar_url ($obj['user']['fbid'], 300, 300), 'height' => 300, 'width' => 300)
-                ),
-              'publisher' => array (
-                  '@type' => 'Organization', 'name' => TITLE,
-                  'logo' => array ('@type' => 'ImageObject', 'url' => AMP_IMG_600_60, 'width' => 600, 'height' => 60)
-                ),
-              'description' => mb_strimwidth (remove_ckedit_tag ($obj['content']), 0, 150, '…','UTF-8')
-            ),
-          'scopes' => array (
-            array ('url' => URL, 'title' => TITLE),
-            array ('url' => $obj['url'], 'title' => $obj['title'])),
-          'css' => css ('css/public' . CSS, 'css/article' . CSS),
-          'js' => js ('js/public' . JS, 'js/article' . JS),
-          'now' => 'index',
-          'content' => Step::loadView (PATH_VIEWS . '_article' . PHP, array (
-              'obj' => $obj
-            )),
-        ))))) Step::error ();
+    if (!Step::writeFile (PATH . 'index' . HTML, HTMLMin::minify (Step::loadView (PATH_VIEWS . 'index' . PHP)))) Step::error ();
   
     array_push (Step::$sitemapInfos, array (
       'uri' => '/' . 'index' . HTML,

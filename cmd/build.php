@@ -27,18 +27,18 @@ Step::init ();
 
 Step::cleanBuild ();
 
-Step::apis ();
+// Step::apis ();
 Step::writeIndexHtml ();
-Step::writeArticlesHtml ();
-Step::writeGPSHtml ();
-// Step::writeGPS2Html ();
-Step::writeAuthorHtml ();
-Step::writeLicenseHtml ();
-Step::writeAlbumsHtml ();
-Step::writeVideosHtml ();
-Step::writeSearchHtml ();
+// Step::writeArticlesHtml ();
+// Step::writeGPSHtml ();
+// // Step::writeGPS2Html ();
+// Step::writeAuthorHtml ();
+// Step::writeLicenseHtml ();
+// Step::writeAlbumsHtml ();
+// Step::writeVideosHtml ();
+// Step::writeSearchHtml ();
 
-Step::writeSitemap ();
+// Step::writeSitemap ();
 
 header ('Content-Type: application/json');
 echo json_encode (array ('result' => 'success'));
